@@ -9,7 +9,6 @@ get_frame_rate=input('Enter Desired Mbps Rate')
 ## Enter frame rate as follows  for 48Mbps please enter 48 
 new_count_1=1
 nc=[]
-
 #print(new_count_1)
 
 for i in range(1,5):
