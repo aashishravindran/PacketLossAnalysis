@@ -12,9 +12,9 @@ def reference_ts(line):
     for i in range(0,len(line)):
     #print(i,line[i])
         if i==0:
-           reference_timestamps.append(float(line[i].split(',@')[1]))
+           reference_timestamps.append(float(line[i].split(',@')[1])) #Get all time Stamps from the reference file
         elif "Starting" in line[i]:
-            i+=1;
+            i+=1; #skip the line with "Starting new line"
             reference_timestamps.append(float(line[i].split(',@')[1]))
     return reference_timestamps
        
@@ -26,7 +26,7 @@ def compute_time_sync(reference_timestamps,new_file,dest_pt):
      ref_index=0;
      #k=0;
      j=0;
-     length=int(len(new_file))
+     length=int(len(new_file)) #Get length of New_file
      print(length)
 
      while j < length:
