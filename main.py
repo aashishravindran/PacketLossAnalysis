@@ -24,7 +24,7 @@ reference_map=reference_ts(line)
 for i,num in enumerate(name,1):
       fp=open(num,"r")
       new_file=fp.readlines()
-      dest="Independence_dayyyyy"+str(i)+".txt"
+      dest="Independence_dayyyyy"+str(i)+".txt" #Enter destination text file
       compute_time_sync(reference_map,new_file,dest) #FIle in Inports
       fp.close()
       

@@ -32,8 +32,9 @@ def compute_time_sync(reference_timestamps,new_file,dest_pt):
      while j < length:
                         
               if j==0:
-                  print("I came Here")
-                  new_val=new_file[0].split(",@")
+                  #print("I came Here")
+                  #Time Sync Calcualtion Starts here
+                  new_val=new_file[0].split(",@") #Split to get the time Stamp
                   count=float("{0:.3f}".format(float(new_val[1])-reference_timestamps[ref_index]))
                   sync_count=float("{0:.3f}".format(float(new_val[1])-count))
                   fin_out=str(new_val[0])+", @"+str(sync_count)
@@ -54,7 +55,7 @@ def compute_time_sync(reference_timestamps,new_file,dest_pt):
                           
                           
               else:
-                          
+                          #Calculating for other frames from the second frame to "Starting new Run"
                           new_val_1=new_file[j].split(",@")
                           final_count=float("{0:.3f}".format(float(new_val_1[1])-sync_count))
                           T_count=float("{0:.3f}".format(float(new_val_1[1])+final_count))
@@ -64,7 +65,7 @@ def compute_time_sync(reference_timestamps,new_file,dest_pt):
 
               j+=1 
               
-     test.close()
+     test.close() #Close the file
      return 0;
 
 
