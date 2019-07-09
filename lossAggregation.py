@@ -35,10 +35,10 @@ count=get_count(frame_rate)
 count=count[0]
 
 
-name= (str(frame_rate+"Mbps"+"_1.txt")).lstrip()#'48Mbps_1.txt'
-name_1=(str(frame_rate+"Mbps"+"_2.txt")).lstrip()
-name_2=(str(frame_rate+"Mbps"+"_3.txt")).lstrip()
-name_3=(str(frame_rate+"Mbps"+"_3.txt")).lstrip()
+name= (str("files/"+frame_rate+"Mbps"+"_1.txt")).lstrip()#'48Mbps_1.txt'
+name_1=(str("files/"+frame_rate+"Mbps"+"_2.txt")).lstrip()
+name_2=(str("files/"+frame_rate+"Mbps"+"_3.txt")).lstrip()
+name_3=(str("files/"+frame_rate+"Mbps"+"_3.txt")).lstrip()
 
 rec_1=format_data(name)
 recv_2=format_data(name_1)
@@ -143,7 +143,7 @@ for k,j in  enumerate(dict):
     loss_Aggregation[j]=run; #Assign the array to the Hash Map
     
 #print(loss_Aggregation)
-file=open("Data_Aggregation_Logs.txt","w")
+file=open("files/Data_Aggregation_Logs.txt","w")
 file.write(frame_rate+"MbpsLogs\n")
 
 for i, k in enumerate(loss_Aggregation):
@@ -152,6 +152,6 @@ for i, k in enumerate(loss_Aggregation):
     new=loss_Aggregation[k];
     for i in range(0,500):
         print("Index: "+str(i)+" Value:"+str(new[i]))
-        file.write("Index: "+str(i)+" Value:"+str(new[i])+"\n")
+        file.write("Index:"+str(i)+","+"Value:"+str(new[i])+"\n")
 
 file.close()

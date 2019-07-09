@@ -67,14 +67,3 @@ def compute_time_sync(reference_timestamps,new_file,dest_pt):
      test.close()
      return 0;
 
-
-
-
-         
-        
-     
-         
-
-
-
-        
