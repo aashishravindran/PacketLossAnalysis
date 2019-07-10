@@ -26,7 +26,7 @@ import seaborn as sns; sns.set()
 # =============================================================================
 
 
-fp =open("files/Data_Aggregation_Logs.txt","r")
+fp =open("files/Data_Aggregation_Logs.txt","r") ## Open the File
 
 dict={}
 get_val=0;

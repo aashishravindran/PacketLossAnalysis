@@ -43,7 +43,7 @@ def pie_plot(type,duration,totalDuration):
     return 0
 
 
-type=[0,0,1,2,0,1]
+type=[0,0,1,2,0,1] ##Driver Code
 duration=[-1,100,200,300,400,500]
 totalDuration=1500
 d=pie_plot(type,duration,totalDuration)
