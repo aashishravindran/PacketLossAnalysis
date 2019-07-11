@@ -35,7 +35,7 @@ def parse_tf_and_get_ts(reference_map, file_to_sync):
             seq.append(int(ls[i].split('and')[0].split('=')[1]))
 
     return SyncLog
-# Call Transmission Delay and Print Value======================================================
+# ==================Call Transmission Delay and Print Value======================================================
 
 
 def execute_delay_fn_print(ref,recv):
