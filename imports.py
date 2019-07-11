@@ -5,7 +5,7 @@ Created on Thu Jul  4 09:52:50 2019
 
 @author: ashubunutu
 """
-
+# Created for Time Synchronization and Delay
 
 def reference_ts(line):
     reference_timestamps = [];
