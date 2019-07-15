@@ -107,37 +107,38 @@ for k,j in  enumerate(dict):
     run=[]
     for i in range(0,500):
            #================================Append appropriate values based on the condition==========================       
-            if  (i in fin1 and i not in fin2  and i not in fin3 and i not in fin4):
+            if  (i in fin1 and i  in fin2  and i  in fin3 and i  in fin4):
                 run.append(1)
-            elif (i not in fin1 and i in fin2  and i not in fin3 and i not in fin4):
+            elif  (i in fin1 and i  in fin2  and i  in fin3 and i  not in fin4):
                 run.append(2)
-            elif (i not in fin1 and i not in fin2  and i in fin3 and i not in fin4):
+            elif  (i in fin1 and i  in fin2  and i  not in fin3 and i  in fin4):
                 run.append(3)
-            elif (i not in fin1 and i not in fin2  and i not in fin3 and i in fin4):
+            elif  (i in fin1 and i not in fin2  and i  in fin3 and i  in fin4):
                 run.append(4)
-            elif (i in fin1 and i  in fin2  and i not in fin3 and i not in fin4):
+            elif  (i in fin1 and i  in fin2  and i not in fin3 and i  not in fin4):
                 run.append(5)
-            elif (i in fin1 and i not in fin2  and i  in fin3 and i not in fin4):
+            elif  (i in fin1 and i not in fin2  and i  in fin3 and i  not in fin4):
                 run.append(6)
-            elif (i in fin1 and i not in fin2  and i not in fin3 and i in fin4):
+            elif  (i in fin1 and i  not in fin2  and i not in fin3 and i  in fin4):
                 run.append(7)
-            elif (i not in fin1 and i  in fin2  and i in fin3 and i not in fin4):
+            elif  (i not in fin1 and i  in fin2  and i  in fin3 and i  in fin4):
                  run.append(8)
-            elif (i not in fin1 and i in fin2  and i not in fin3 and i  in fin4):
+            elif  (i not in fin1 and i  in fin2  and i  not in fin3 and i  in fin4):
                  run.append(9)
-            elif (i not in fin1 and i not in fin2  and i  in fin3 and i in fin4):
+            elif  (i not in fin1 and i  in fin2  and i  in fin3 and i  not in fin4):
                  run.append(10)
-            elif (i in fin1 and i not in fin2  and i not in fin3 and i not in fin4):
+            elif  (i not in fin1 and i  not in fin2  and i  in fin3 and i  in fin4):
                  run.append(11)
-            elif (i in fin1 and i  in fin2  and i  not in fin3 and i  in fin4):
+            elif  (i not in fin1 and i  not in fin2  and i  in fin3 and i  not in fin4):
                  run.append(12)
-            elif (i in fin1 and i not in fin2  and i  in fin3 and i  in fin4):
+            elif  (i not in fin1 and i  not in fin2  and i  not in fin3 and i  in fin4):
                  run.append(13)
-            elif (i in fin1 and i  in fin2  and i  in fin3 and i  in fin4):
+            elif  (i not in fin1 and i  in fin2  and i  not in fin3 and i  not in fin4):
                  run.append(14)
-            else:
-                run.append(0)
-       
+            elif  (i in fin1 and i not in fin2  and i  not in fin3 and i  not in fin4):
+                run.append(15)
+            elif  (i not in fin1 and i  not in fin2  and i  not in fin3 and i  not in fin4):
+                run.append(16)
             
             
     loss_Aggregation[j]=run; #Assign the array to the Hash Map
