@@ -1,0 +1,194 @@
+Index: window_length.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- window_length.py	(date 1562873361722)
++++ window_length.py	(date 1562873361722)
+@@ -0,0 +1,151 @@
++import pandas as pd
++
++
++def compute_time_sync(reference_timestamps, new_file, dest_pt):
++    test = open(dest_pt, "w")
++
++    ref_index = 0;
++    # k=0;
++    j = 0;
++    length = int(len(new_file))  # Get length of New_file
++    print(length)
++
++    while j < length:
++
++        if j == 0:
++            # print("I came Here")
++            # Time Sync Calcualtion Starts here
++            new_val = new_file[0].split(",@")  # Split to get the time Stamp
++            count = float("{0:.3f}".format(float(new_val[1]) - reference_timestamps[ref_index]))
++            sync_count = float("{0:.3f}".format(float(new_val[1]) - count))
++            fin_out = str(new_val[0]) + ", @" + str(sync_count)
++            test.write(fin_out + "\n")
++
++        elif (new_file[j].strip() == "=================Starting New Run========="):
++
++            j += 1;
++            ref_index += 1
++            new_val = new_file[j].split(",@")
++            count = float("{0:.3f}".format(float(new_val[1]) - reference_timestamps[ref_index]))
++            sync_count = float("{0:.3f}".format(float(new_val[1]) - count))
++            fin_out = str(new_val[0]) + ", @" + str(sync_count)
++            test.write("=========================Starting New Run==================\n")
++            test.write(fin_out + "\n")
++            print(fin_out)
++
++
++
++        else:
++            # Calculating for other frames from the second frame to "Starting new Run"
++            new_val_1 = new_file[j].split(",@")
++            final_count = float("{0:.3f}".format(float(new_val_1[1]) - sync_count))
++            T_count = float("{0:.3f}".format(float(new_val_1[1]) + final_count))
++            fin_out_1 = str(new_val_1[0]) + ", @" + str(T_count)
++            test.write(fin_out_1 + "\n")
++            print("s" + fin_out_1 + "," + str(j))
++
++        j += 1
++
++    test.close()  # Close the file
++    return 0;
++
++def get_retransmission_delays (ref,sync):
++    #print("Here1")
++    difference=[]
++    delay={}
++    for i in range(0, len(sync)):
++        for j in range(0, len(sync[i])):
++            # print(sync[i][j])
++            # print(sync[i+1][j])
++            if sync[i][j] in ref[0]:
++                diff = sync[i + 1][j] - ref[1][ref[0].index(sync[i][j])]
++                # print(diff)
++                difference.append(diff)
++                delay[sync[i][j]]=diff
++
++
++    return delay;
++
++
++
++
++
++# def get_source_time_stamp(file):
++#
++#     line=file.readlines()
++#     time_stamp={}
++#     ts_filnal={}
++#     count=0
++#     length=len(line)
++#
++#     for i in range(0,length):
++#
++#
++#         if "Starting" in line[i] or i == length-1:
++#
++#
++#             ts_filnal[count] = time_stamp;
++#             t=0
++#             time_stamp={}
++#             count += 1
++#         else :
++#             seq = int(line[i].split('and')[0].split('=')[1])
++#             new = float("{0:.3f}".format(float(line[i].split(', @')[1])))
++#             time_stamp[seq] = new
++#
++#     return ts_filnal;
++
++
++
++# def get_receiver_delays(fp,ts_filnal):
++#     ls=fp.readlines()
++#
++#     length=len(ls)
++#
++#     lcount=0
++#     count=0
++#     diff=0.0
++#
++#     dict={}
++#     recv_1={}
++#
++#     for k in range(0,length):
++#
++#         if "Starting" in ls[k]:
++#             #recv_1[count] = dict
++#             dict={}
++#             lcount+= 1
++#             count+= 1
++#
++#         else:
++#
++#             seq = int(ls[k].split('and')[0].split('=')[1])
++#             new = float("{0:.3f}".format(float(ls[k].split(', @')[1])))
++#             #print(lcount,seq,new)
++#
++#             if seq in ts_filnal[lcount]:
++#                 t=ts_filnal[lcount][seq]
++#                 #print(t)
++#                 diff=new-ts_filnal[lcount][seq]
++#                 dict[seq] = diff
++#            # print(k)
++#             recv_1[count] = dict
++#
++#     return recv_1
++#
++#
++#
++# file=open("files/Sync_logs1.txt",'r')
++# fp=open("files/Sync_logs2.txt",'r')
++#
++# time_stamp = get_source_time_stamp(file)
++# recv = get_receiver_delays(fp,time_stamp)
++# print(len(recv))
++# print(recv[0][21])
++
++
++
++#439199.7920000553
++
++
++
+Index: plot.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\n\"\"\"\nCreated on Tue Jul  9 10:07:16 2019\n\n@author: ashubunutu\n\"\"\"\nfrom plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot\n\nimport plotly.plotly as py\nimport plotly\nimport sys\nimport plotly.graph_objs as go\n\nimport numpy as np\n\n\nx0 = np.random.randn(6000)\nplotly.tools.set_credentials_file(username='CryptoMatrix', api_key='XsGTHDyBIR0PiXmYqeI4')\n\n\ndef pie_plot(type,duration,totalDuration):\n    data=0;\n    mgmy=0;\n    ctrl=0;\n    for i,val in enumerate(type):\n        if val== 0:\n            data+=duration[i]\n        elif val== 1:\n            mgmy+=duration[i]\n        elif val == 2:\n            ctrl+=duration[i]\n        else:\n            continue\n\n    total_duration=totalDuration-(data+mgmy+ctrl)\n    sizes = [data,mgmy,ctrl,total_duration]\n    labels = ['Data', 'Control', 'Managemt', 'Empty']\n    trace = go.Pie(labels=labels, values=sizes)\n    py.plot([trace], filename='basic_pie_chart')\n\n\n    return 0\n\n\ntype=[0,0,1,2,0,1] ##Driver Code\nduration=[-1,100,200,300,400,500]\ntotalDuration=1500\nd=pie_plot(type,duration,totalDuration)\n\n\n\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- plot.py	(date 1562873925000)
++++ plot.py	(date 1562873820797)
+@@ -7,6 +7,7 @@
+ """
+ from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+ 
++#Plot Ly Credentials
+ import plotly.plotly as py
+ import plotly
+ import sys
+Index: kmeans.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\n\"\"\"\nCreated on Mon Jul  8 12:10:10 2019\n\n@author: ashubunutu\n\"\"\"\n\nimport pandas as pd ;\nimport matplotlib.pyplot as plt\nfrom sklearn.cluster import KMeans\nimport seaborn as sns; sns.set()\n\n\n# =============================================================================\n# df= pd.read_csv(\"Data_Aggregation_Logs.txt\",sep=\"\\n\",header=None,names=['val'])\n# mod=df['val'].str.split(\",\",n=1,expand=True)\n# df['Frame_no']=mod[0]\n# df['value']=mod[1]\n# \n# df.drop(columns =[\"val\"], inplace = True) \n# \n# for row in df.iterrows():\n#     print(row['Frame_no'])\n#     \n# =============================================================================\n\n\nfp =open(\"files/Data_Aggregation_Logs.txt\",\"r\") ## Open the File\n\ndict={}\nget_val=0;\nlits={}\n\n\nline=fp.readlines()\nt=line[0]\nline.pop(0)\n#print(line)\n\n#       break;\nframe=[]\nfor i in range(0,len(line)):\n\n   if \"Run No\" in line[i]:\n       new_str=int(line[i].split(\"Run No========\")[1])\n       get_val=i+1;\n       while 'Run No' not in line[get_val] and get_val+1 <len(line):\n           get_line=line[get_val].split(\",\")\n           frame_no=int(get_line[0].split(\":\")[1])\n           loss_aggr_val=int(get_line[1].split(\":\")[1])\n           get_val+=1\n           lits[frame_no]=loss_aggr_val\n\n       dict[new_str]=lits\n       lits={}\nvalue=[]\nrun=[]\ndsf=pd.DataFrame(dict)\n\n# dsf['Frame_no']=dsf.index\n# for i in range(1,23):\n#     print(i)\n#     s=str(\"Run_no\"+str(i))\n#     dsf[s]=dsf[i]\n#     dsf.drop(columns =[i], inplace = True)\n#\n# #x=dsf['Frame_no']\n# #y=dsf['Run_no3']\n# #plt.scatter(y,x)\n# #plt.show()\n#\n# dt=pd.DataFrame({\n#         'x':dsf['Frame_no'],\n#         'y':dsf[dsf.columns.difference(['Frame_no'])]\n#          })\n#\n#\n\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- kmeans.py	(date 1562873925000)
++++ kmeans.py	(date 1562873805941)
+@@ -10,7 +10,7 @@
+ import matplotlib.pyplot as plt
+ from sklearn.cluster import KMeans
+ import seaborn as sns; sns.set()
+-
++# Import
+ 
+ # =============================================================================
+ # df= pd.read_csv("Data_Aggregation_Logs.txt",sep="\n",header=None,names=['val'])

@@ -144,7 +144,7 @@ for k,j in  enumerate(dict):
     loss_Aggregation[j]=run; #Assign the array to the Hash Map
     
 #print(loss_Aggregation)
-file=open("files/Data_Aggregation_Logs.txt","w")
+file=open("files/"+frame_rate+"Mbps"+"Data_Aggregation_Logs.txt","w")
 file.write(frame_rate+"MbpsLogs\n")
 
 for i, k in enumerate(loss_Aggregation):
