@@ -16,6 +16,8 @@ import scipy.cluster.hierarchy as sch
 import seaborn as sns; sns.set()
 import numpy as np
 from get_count import get_count
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
 
 
 def get_data_fram(line,count,frame_rate):
@@ -76,6 +78,73 @@ count=get_count(str(frame1))
 count=count[0]
 fe=get_data_fram(line,count,frame1)
 
+x=fe.iloc[:,1:23]
+y=fe.iloc[:,0]
+
+for i, rows in x.iterrows():
+    print(rows,i)
+    c=rows.value_counts()
+    if 16 in c:
+        x.loc[i,'WorseCase']=c[16]
+    if 1 in c:
+        x.loc[i,'BestCase']=c[1]
+   
+
+#z=x['WorseCase'].values
+#z=z[~np.isnan(z)]
+plt.scatter(y,x['WorseCase'],x['BestCase'])
+plt.show()
+fe['WorseCase'] = x['WorseCase'].replace(np.nan, 0)
+fe['BestCase'] = x['BestCase'].replace(np.nan, 0)
+kmeans1=fe[['Frame_no','BestCase','WorseCase']].values
+kmeans = KMeans(n_clusters=2)
+kmeans.fit(kmeans1)
+
+labels = kmeans.predict(kmeans1)
+centroids = kmeans.cluster_centers_
+
+
+plt.scatter(kmeans1[labels==0,0],kmeans1[labels==0,1],kmeans1[labels==0,2],  c = 'red', label = 'Cluster 1')
+plt.scatter(kmeans1[labels == 1, 0], kmeans1[labels == 1, 1], kmeans1[labels==1,2], c = 'blue', label = 'Cluster 2')
+plt.scatter(kmeans1[labels == 2, 0], kmeans1[labels == 2, 1], kmeans1[labels==2,2],c = 'green', label = 'Cluster 3')
+plt.show()
+
+
+
+
+#count=0
+#dict={}
+
+#        
+        
+#x = StandardScaler().fit_transform(x)
+#z=x[~np.isnan(x).any(axis=1)]
+#pca = PCA(n_components=2)
+#principalComponents = pca.fit_transform(z)
+#principalDf = pd.DataFrame(data = principalComponents
+#             , columns = ['principal component 1', 'principal component 2'])
+#
+#finalDf = pd.concat([principalDf, y], axis = 1)
+#
+#fig = plt.figure(figsize = (8,8))
+#ax = fig.add_subplot(1,1,1) 
+#ax.set_xlabel('Principal Component 1', fontsize = 15)
+#ax.set_ylabel('Principal Component 2', fontsize = 15)
+#ax.set_title('2 component PCA', fontsize = 20)
+#targets = 
+#colors = ['r', 'g', 'b']
+#for target, color in zip(targets,colors):
+#    indicesToKeep = finalDf['Frame_no'] == target
+#    ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
+#               , finalDf.loc[indicesToKeep, 'principal component 2']
+#               , c = color
+#               , s = 50)
+#ax.legend(targets)
+#ax.grid()
+#
+#plt.show()
+
+
 count=get_count(str(frame2))
 count=count[0]
 ft=get_data_fram(ls,count,frame2)
@@ -84,7 +153,7 @@ ft=get_data_fram(ls,count,frame2)
 res=fe.merge(ft, on='Frame_no', how='left')
 
 
-km = res[['Frame_no','avg'+str(frame1)]].values
+km = res[['Frame_no','Run_no1'+str(frame1)]].values
 
 
 
@@ -107,7 +176,7 @@ ax1[0].set_xlabel(frame1)
 
 
 
-km = res[['Frame_no','avg'+str(frame2)]].values
+km = res[['Frame_no','Run_no1'+str(frame2)]].values
 
 
 kmeans = KMeans(n_clusters=3)
@@ -120,10 +189,6 @@ ax1[1].scatter(km[labels==0,0],km[labels==0,1],  c = 'red', label = 'Cluster 1')
 ax1[1].scatter(km[labels == 1, 0], km[labels == 1, 1],  c = 'blue', label = 'Cluster 2')
 ax1[1].scatter(km[labels == 2, 0], km[labels == 2, 1],  c = 'green', label = 'Cluster 3')
 ax1[1].set_xlabel(frame2)
-
-
-
-
 
 
 #arr.append(km[labels==0,0])
