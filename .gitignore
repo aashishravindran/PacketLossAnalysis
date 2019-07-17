@@ -13,4 +13,5 @@
 Final_logs.txt
 window_length.py
 graph.py
-
+venv
+__pycache__

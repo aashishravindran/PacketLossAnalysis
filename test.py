@@ -18,7 +18,7 @@ import numpy as np
 from get_count import get_count
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-
+from sklearn.cluster import DBSCAN
 
 def get_data_fram(line,count,frame_rate):
     lits={}
@@ -78,6 +78,10 @@ count=get_count(str(frame1))
 count=count[0]
 fe=get_data_fram(line,count,frame1)
 
+
+
+
+
 x=fe.iloc[:,1:23]
 y=fe.iloc[:,0]
 
@@ -92,27 +96,65 @@ for i, rows in x.iterrows():
 
 #z=x['WorseCase'].values
 #z=z[~np.isnan(z)]
-plt.scatter(y,x['WorseCase'],x['BestCase'])
-plt.show()
+#plt.scatter(x['WorseCase'],x['BestCase'],y)
+#plt.show()
 fe['WorseCase'] = x['WorseCase'].replace(np.nan, 0)
 fe['BestCase'] = x['BestCase'].replace(np.nan, 0)
-kmeans1=fe[['Frame_no','BestCase','WorseCase']].values
-kmeans = KMeans(n_clusters=2)
-kmeans.fit(kmeans1)
+kmeans1=fe[['Frame_no','BestCase']].values
+hc = AgglomerativeClustering(n_clusters = 3, affinity = 'euclidean', linkage = 'ward')
+labels=hc.fit_predict(kmeans1)
 
-labels = kmeans.predict(kmeans1)
-centroids = kmeans.cluster_centers_
+#labels = kmeans.predict(kmeans1)
+#centroids = kmeans.cluster_centers_ ,kmeans1[labels==0,2]
 
 
-plt.scatter(kmeans1[labels==0,0],kmeans1[labels==0,1],kmeans1[labels==0,2],  c = 'red', label = 'Cluster 1')
-plt.scatter(kmeans1[labels == 1, 0], kmeans1[labels == 1, 1], kmeans1[labels==1,2], c = 'blue', label = 'Cluster 2')
-plt.scatter(kmeans1[labels == 2, 0], kmeans1[labels == 2, 1], kmeans1[labels==2,2],c = 'green', label = 'Cluster 3')
+ax=plt
+ax.scatter(kmeans1[labels==0,0],kmeans1[labels==0,1] ,c = 'red', label = 'Cluster 1')
+ax.scatter(kmeans1[labels == 1, 0], kmeans1[labels == 1, 1],c = 'blue', label = 'Cluster 2')
+ax.scatter(kmeans1[labels == 2, 0], kmeans1[labels == 2, 1],c = 'green', label = 'Cluster 3')
+ax.set_xlabel('x-Frame_no')
+ax.set_ylabel('y-BestCase')
+#ax.set_zlabel('z-worseCase')
 plt.show()
 
 
-
-
-#count=0
+## DBSCAN Implementation Starts here 
+#z=fe[['Run_no154','Run_no2054','Frame_no']]
+##z=z.replace(np.nan, 0)
+#X=StandardScaler().fit_transform(z)
+#db = DBSCAN(eps=0.3, min_samples=3).fit(X)
+#core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
+#core_samples_mask[db.core_sample_indices_] = True
+#labels = db.labels_
+#
+#n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
+#n_noise_ = list(labels).count(-1)
+#
+#
+#unique_labels = set(labels)
+#colors = [plt.cm.Spectral(each)
+#          for each in np.linspace(0, 1, len(unique_labels))]
+#
+#
+#for k, col in zip(unique_labels, colors):
+#    if k == -1:
+#        # Black used for noise.
+#        col = [0, 0, 0, 1]
+#
+#    class_member_mask = (labels == k)
+#
+#    xy = X[class_member_mask & core_samples_mask]
+#    plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
+#             markeredgecolor='k', markersize=14)
+#
+#    xy = X[class_member_mask & ~core_samples_mask]
+#    plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
+#             markeredgecolor='k', markersize=6)
+#
+#plt.title('Estimated number of clusters: %d' % n_clusters_)
+#plt.show()
+#
+##count=0
 #dict={}
 
 #        
