@@ -23,6 +23,7 @@ import matplotlib.cm as cm
 from sklearn.datasets.samples_generator import make_blobs
 from sklearn import metrics
 from collections import Counter
+from random import randint
 
 def get_data_fram(line,count,frame_rate):
     lits={}
@@ -173,10 +174,23 @@ c=Counter(model.labels_)
 outliers_df=outliers_df[model.labels_==-1]
 outliers_df['Frame_no']=outliers_df.index
 
+colors = []
 
-plt.scatter(outliers_df['Frame_no'],outliers_df['Run_no2054'],c='red',s=100)
+for i in range(22):
+    colors.append('%06X' % randint(0, 0xFFFFFF))
+
+
+val=outliers_df.iloc[:,outliers_df.columns!='Frame_no'].columns
+for col in val:
+    
+    plt.scatter(outliers_df['Frame_no'],outliers_df[col],c=np.random.rand(3,),s=100,label=col)
+#plt.scatter(outliers_df['Frame_no'],outliers_df['Run_no154'],c='blue',s=100)
+
 plt.show()
-
+plt.legend(bbox_to_anchor=(1, 1),
+           bbox_transform=plt.gcf().transFigure)
+plt.xlabel('Seq No')
+plt.ylabel('Loss Aggregation No')
 
 #z=fe[['Run_no154','Run_no2054','Frame_no']]
 ##z=z.replace(np.nan, 0)
