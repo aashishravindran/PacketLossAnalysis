@@ -24,6 +24,9 @@ from sklearn import metrics
 from collections import Counter
 from random import randint
   
+import plotly.graph_objects as go
+
+import plotly.express as px
 
 
 def get_data_fram(line,count,frame_rate):
@@ -114,13 +117,32 @@ outliers_df=pd.DataFrame(x)
 c=Counter(model.labels_)
 outliers_df=outliers_df[model.labels_==0]
 outliers_df['Frame_no']=outliers_df.index
-ax[0][0].scatter(outliers_df['Frame_no'].head(50),outliers_df['Run_no20'].head(50),c='green',label='Run_no20')
-ax[0][0].scatter(outliers_df['Frame_no'].head(50),outliers_df['Run_no19'].head(50),c='red',label='Run_no19')
-ax[0][0].scatter(outliers_df['Frame_no'].head(50),outliers_df['Run_no18'].head(50),c='blue',label='Run_no18')
-ax[0][0].set_xlabel('Seq No')
-ax[0][0].set_ylabel('Loss Aggregation Value')
-ax[0][0].set_title('A DBSCAN Algorithm for Identifying Outliers for '+str(frame1)+' Mbps')
-ax[0][0].legend()
+
+#lostFrames=res[['Frame_no','BestCase','WorseCase']]
+##plt.plot(lostFrames['Frame_no'],lostFrames['BestCase'],label='Frame Recv Across All receivers')
+#
+#plt.plot(lostFrames['Frame_no'],lostFrames['WorseCase'],label='lost Freames')
+#plt.show()
+#plt.legend()
+
+#ax[0][0].scatter(outliers_df['Frame_no'].head(50),outliers_df['Run_no20'].head(50),c='green',label='Run_no20')
+#ax[0][0].scatter(outliers_df['Frame_no'].head(50),outliers_df['Run_no19'].head(50),c='red',label='Run_no19')
+#ax[0][0].scatter(outliers_df['Frame_no'].head(50),outliers_df['Run_no18'].head(50),c='blue',label='Run_no18')
+#ax[0][0].set_xlabel('Seq No')
+#ax[0][0].set_ylabel('Loss Aggregation Value')
+#ax[0][0].set_title('A DBSCAN Algorithm for Identifying Outliers for '+str(frame1)+' Mbps')
+#ax[0][0].legend()
+#
+#
+fig = go.Figure()
+for col in outliers_df.iloc[:,(outliers_df.columns!='Frame_no') &(outliers_df.columns!='BestCase')&(outliers_df.columns!='WorseCase')].columns:
+    fig.add_trace(go.Scatter(x=outliers_df['Frame_no'], y=outliers_df[col],
+                    mode='markers',
+                    name=str(col)))
+
+
+fig.update_layout(title='A DBSCAN Algorithm for Identifying Outliers for '+str(frame1)+' Mbps')
+fig.write_html('first_figure.html', auto_open=True)
 
 #np.random.rand(3,)
 
@@ -133,31 +155,41 @@ c=Counter(model.labels_)
 outliers_df=outliers_df[model.labels_==0]
 outliers_df['Frame_no']=outliers_df.index
 val=outliers_df.iloc[:,outliers_df.columns!='Frame_no'].columns
-ax[1][0].scatter(outliers_df['Frame_no'].head(50),outliers_df['Run_no20'].head(50),c='green',label='Run_no20')
-ax[1][0].scatter(outliers_df['Frame_no'].head(50),outliers_df['Run_no19'].head(50),c='red',label='Run_no19')
-ax[1][0].scatter(outliers_df['Frame_no'].head(50),outliers_df['Run_no18'].head(50),c='blue',label='Run_no18')
-ax[1][0].legend()
-#plt.scatter(outliers_df['Frame_no'],outliers_df['Run_no154'],c='blue',s=100)
+#ax[1][0].scatter(outliers_df['Frame_no'].head(50),outliers_df['Run_no20'].head(50),c='green',label='Run_no20')
+#ax[1][0].scatter(outliers_df['Frame_no'].head(50),outliers_df['Run_no19'].head(50),c='red',label='Run_no19')
+#ax[1][0].scatter(outliers_df['Frame_no'].head(50),outliers_df['Run_no18'].head(50),c='blue',label='Run_no18')
+#ax[1][0].legend()
+##plt.scatter(outliers_df['Frame_no'],outliers_df['Run_no154'],c='blue',s=100)
+#
+#
+#ax[1][0].set_xlabel('Seq No')
+#ax[1][0].set_ylabel('Loss Aggregation Value')
+#ax[1][0].set_title('A DBSCAN Algorithm for Identifying Outliers for '+str(frame1)+' Mbps')
 
 
-ax[1][0].set_xlabel('Seq No')
-ax[1][0].set_ylabel('Loss Aggregation Value')
-ax[1][0].set_title('A DBSCAN Algorithm for Identifying Outliers for '+str(frame2)+' Mbps')
+
+fig1 = go.Figure()
+for col in outliers_df.iloc[:,(outliers_df.columns!='Frame_no') &(outliers_df.columns!='BestCase')&(outliers_df.columns!='WorseCase')].columns:
+    fig1.add_trace(go.Scatter(x=outliers_df['Frame_no'], y=outliers_df[col],
+                    mode='markers',
+                    name=str(col)))
 
 
+fig1.update_layout(title='A DBSCAN Algorithm for Identifying Outliers for '+str(frame2)+' Mbps')
+fig1.write_html('first_figure_2.html', auto_open=True)
 
 
-lostFrames=res[['Frame_no','BestCase','WorseCase']]
-#plt.plot(lostFrames['Frame_no'],lostFrames['BestCase'],label='Frame Recv Across All receivers')
-
+#lostFrames=res[['Frame_no','BestCase','WorseCase']]
+##plt.plot(lostFrames['Frame_no'],lostFrames['BestCase'],label='Frame Recv Across All receivers')
+#
 #plt.plot(lostFrames['Frame_no'],lostFrames['WorseCase'],label='lost Freames')
 #plt.show()
 #plt.legend()
-#val={}
-#t=[]
-
-
-r=res[(res['Run_no1']==6) |(res['Run_no1']==5) |(res['Run_no1']==10)|(res['Run_no1']==14)]
+##val={}
+##t=[]
+#
+#
+#r=res[(res['Run_no1']==6) |(res['Run_no1']==5) |(res['Run_no1']==10)|(res['Run_no1']==14)]
 
 #fig,ax=plt.subplots(nrows=2,ncols=1,sharex=False,sharey=False,squeeze=False)
 #
