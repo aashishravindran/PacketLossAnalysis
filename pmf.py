@@ -60,18 +60,15 @@ def get_agg_frame_loss(x,interval):
     d={}
     c=0
     for key,value in x.items():
-        print(key,value)
+#        print(key,value)
         if value =='N':
             d[key]=value
-               
-            
-          
-    for key,value in d.items():
-        c+=1
-        if key%interval ==0:
+            c+=1
+        if key%interval == 0:
             fina_dict[key]=c;
             c=0
-            
+        else:
+             d[key]=value
     
     return fina_dict
 
@@ -79,63 +76,12 @@ def get_agg_frame_loss(x,interval):
 def probabilty(y):
     prob={}
     for key,value in y.items(): 
-        prob[key]=value/len(y)
+        prob[key]=value/500
     
     return prob
-
-
-
-def get_frame_Ye_n(x,interval):
-    fina_dict={}
-    c=0
-    nc=0
-    for key,value in x.items():
-        print(key,value)
-        if key%interval !=0:
-            if value =='N':
-                nc+=1
-            if value=='Y':
-                c+=1
-        else:
-            va=[]
-            va.append(nc)
-            va.append(c)
-            fina_dict[key]=va
-            nc=0
-            c=0              
-    
-#    for key,value in d.items():
-#        c+=1
-#        if key%interval ==0:
-#            fina_dict[key]=c;
-#            c=0       
-    return fina_dict
-    
+  
 #
 #fig,ax=plt.subplots(nrows=2,ncols=1,sharex=False,sharey=True,squeeze=False)
-    
-
-
-    
-    
-
-
-
-frame1=24
-
-name= open("files/"+str(frame1)+"Mbps"+"_1.txt")
-name_1=open("files/"+str(frame1)+"Mbps"+"_2.txt")
-name_2=open("files/"+str(frame1)+"Mbps"+"_3.txt")
-name_3=open("files/"+str(frame1)+"Mbps"+"_4.txt")
-
-
-
-recv_1=file_read(name)
-recv_2=file_read(name_1)
-recv_3=file_read(name_2)
-recv_4=file_read(name_3)
-
-
 def consolidated_run(recv):
     run={}
     for i in range(0,len(recv)):
@@ -148,180 +94,12 @@ def consolidated_run(recv):
     result['Interval']=result.index
     result['mean_pmf']=result.loc[:, result.columns != 'Interval'].mean(axis=1)
     
-    return result
-res1=consolidated_run(recv_1)
-res2=consolidated_run(recv_2)
-res3=consolidated_run(recv_3)
-res4=consolidated_run(recv_4)
-
-plt.bar(res1['Interval'],res1['mean_pmf'])
-plt.xlabel('Interval', fontsize=18)
-plt.ylabel('MeanPmf', fontsize=16)
-plt.title('Aggregated Pmf form Node 1')
-plt.savefig('img/Node_1/Aggrpmg.png')
-plt.clf()           
+    return result  
 
 
+    
+    
 
-plt.bar(res2['Interval'],res2['mean_pmf'])
-plt.xlabel('Interval', fontsize=18)
-plt.ylabel('MeanPmf', fontsize=16)
-plt.title('Aggregated Pmf form Node 2')
-plt.savefig('img/Node_2/Aggrpmg.png')
-plt.clf()           
-
-
-
-plt.bar(res3['Interval'],res3['mean_pmf'])
-plt.xlabel('Interval', fontsize=18)
-plt.ylabel('MeanPmf', fontsize=16)
-plt.title('Aggregated Pmf form Node 3')
-plt.savefig('img/Node_3/Aggrpmg.png')
-plt.clf()           
-
-
-plt.bar(res4['Interval'],res4['mean_pmf'])
-plt.xlabel('Interval', fontsize=18)
-plt.ylabel('MeanPmf', fontsize=16)
-plt.title('Aggregated Pmf form Node 4')
-plt.savefig('img/Node_4/Aggrpmg.png')
-plt.clf()
-
-#================== Derive Code Starts Here =========================================#
-
-
-#for i in range(0,len(recv_1)):
-#      plt.bar(get_lb(recv_1[i])[0],get_lb(recv_1[i])[1])
-#      plt.xlabel('SeqNo', fontsize=18)
-#      plt.ylabel('Frame_received/Lost', fontsize=16)
-#      plt.title('img/Node_1/Run_no'+str(i))
-#      plt.savefig('img/Node_1/Run_no'+str(i)+'.png')
-#      plt.clf()
-#
-#for i in range(0,len(recv_2)):
-#      plt.bar(get_lb(recv_2[i])[0],get_lb(recv_2[i])[1])
-#      plt.xlabel('SeqNo', fontsize=18)
-#      plt.ylabel('Frame_received/Lost', fontsize=16)
-#      plt.title('img/Node_2/Run_no'+str(i))
-#      plt.savefig('img/Node_2/Run_no'+str(i)+'.png')
-#      plt.clf()
-#
-#
-#for i in range(0,len(recv_3)):
-#      plt.bar(get_lb(recv_3[i])[0],get_lb(recv_3[i])[1])
-#      plt.xlabel('SeqNo', fontsize=18)
-#      plt.ylabel('Frame_received/Lost', fontsize=16)
-#      plt.title('img/Node_3/Run_no'+str(i))
-#      plt.savefig('img/Node_3/Run_no'+str(i)+'.png')
-#      plt.clf()
-#
-#
-#
-#for i in range(0,len(recv_4)):
-#      plt.bar(get_lb(recv_4[i])[0],get_lb(recv_4[i])[1])
-#      plt.xlabel('SeqNo', fontsize=18)
-#      plt.ylabel('Frame_received/Lost', fontsize=16)
-#      plt.title('img/Node_4/Run_no'+str(i))
-#      plt.savefig('img/Node_4/Run_no'+str(i)+'.png')
-#      plt.clf()
-
-
-
-#======================== Aggregated Length Data========================#
-
-
-#
-#
-#for i in range(0,len(recv_1)):
-#    x_axis_new=[]
-#    y_axis_new=[]
-#    d=get_lb(recv_1[i])[2]
-#    t=get_agg_frame_loss(d,10)
-##
-#    for key,value in t.items(): 
-#        x_axis_new.append(key)
-#        y_axis_new.append(value/len(t))      
-#
-#    plt.bar(x_axis_new,y_axis_new)
-#    plt.xlabel('Interval', fontsize=18)
-#    plt.ylabel('PMF of Lost Frames', fontsize=16)
-#    plt.title('Node1:PMF_of_lost_frames_for_Run_No'+str(i))
-#    plt.savefig('img/Node_1/PMF_of_lost_frames_for_Run_N0'+str(i)+'.png')
-#    plt.clf()
-#    
-#
-#
-#for i in range(0,len(recv_2)):
-#    x_axis_new=[]
-#    y_axis_new=[]
-#    d=get_lb(recv_2[i])[2]
-#    t=get_agg_frame_loss(d,10)
-##
-#    for key,value in t.items(): 
-#        x_axis_new.append(key)
-#        y_axis_new.append(value/len(t))      
-#
-#    plt.bar(x_axis_new,y_axis_new)
-#    plt.xlabel('Interval', fontsize=18)
-#    plt.ylabel('PMF of Lost Frames', fontsize=16)
-#    plt.title('Node2:PMF_of_lost_frames_for_Run_No'+str(i))
-#    plt.savefig('img/Node_2/PMF_of_lost_frames_for_Run_N0'+str(i)+'.png')
-#    plt.clf()
-#
-#for i in range(0,len(recv_3)):
-#    x_axis_new=[]
-#    y_axis_new=[]
-#    d=get_lb(recv_3[i])[2]
-#    t=get_agg_frame_loss(d,10)
-##
-#    for key,value in t.items(): 
-#        x_axis_new.append(key)
-#        y_axis_new.append(value/len(t))      
-#
-#    plt.bar(x_axis_new,y_axis_new)
-#    plt.xlabel('Interval', fontsize=18)
-#    plt.ylabel('PMF of Lost Frames', fontsize=16)
-#    plt.title('Node3:PMF_of_lost_frames_for_Run_No'+str(i))
-##    plt.savefig('img/Node_2/PMF_of_lost_frames_for_Run_N0'+str(i)+'.png')
-#    plt.savefig('img/Node_3/PMF_of_lost_frames_for_Run_N0'+str(i)+'.png')
-#    plt.clf()
-#    
-#for i in range(0,len(recv_4)):
-#    x_axis_new=[]
-#    y_axis_new=[]
-#    d=get_lb(recv_4[i])[2]
-#    t=get_agg_frame_loss(d,10)
-##
-#    for key,value in t.items(): 
-#        x_axis_new.append(key)
-#        y_axis_new.append(value/len(t))      
-#
-#    plt.bar(x_axis_new,y_axis_new)
-#    plt.xlabel('Interval', fontsize=18)
-#    plt.ylabel('PMF of Lost Frames', fontsize=16)
-#    plt.title('Node4:PMF_of_lost_frames_for_Run_No'+str(i))
-#    plt.savefig('img/Node_4/PMF_of_lost_frames_for_Run_N0'+str(i)+'.png')
-#    plt.clf()
-#==========================================================================================    
-
-#x_axis_new=[]
-#y_axis_new=[]
-#d=get_lb(recv_1[0])[2]
-#t=get_frame_Ye_n(d,10)
-#res=pd.DataFrame(t).transpose()
-#res['Interval']=res.index
-#res['N']=res[0]
-#res['Y']=res[1]
-#res.drop(columns =[0,1], inplace = True) 
-#res['pmf_no']=res['N']/len(res['N'])
-#res['pmf_yes']=res['Y']/len(res['Y'])
-#plt.bar(res['Interval'],res['pmf_no'],color='red')
-#plt.bar(res['Interval'],res['pmf_yes'],color='blue')
-
-
-#for key,value in t.items(): 
-#        x_axis_new.append(key)
-#        y_axis_new.append(value/len(t)) 
 
 
 #loss_burst_len=2
