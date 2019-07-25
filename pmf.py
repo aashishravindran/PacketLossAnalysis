@@ -33,7 +33,7 @@ def file_read(file):
         
     
     
-def get_lb(run):  
+def get_frame_value(run):  
     x_axsi=[]
     bm=[]
     val={}
@@ -53,31 +53,51 @@ def get_lb(run):
     return [x_axsi,bm,val]
 
 
-def get_agg_frame_loss(x,interval):
-    
-   
-    fina_dict={}
-    d={}
-    c=0
-    for key,value in x.items():
-#        print(key,value)
-        if value =='N':
-            d[key]=value
-            c+=1
-        if key%interval == 0:
-            fina_dict[key]=c;
-            c=0
-        else:
-             d[key]=value
-    
-    return fina_dict
+
+def identify_loss_burst_intervals(run):
+    count=0
+    dict={}
+    for key,value in run.items():
+        if value == 'N':
+            count+=1;
+        if (value == 'Y' and count>1):
+            dict[key]=count;
+            count=0;
+    return dict;
 
 
-def probabilty(y):
+#def get_agg_frame_loss(x,interval):
+#    
+#   
+#    fina_dict={}
+#    d={}
+#    c=0
+#    for key,value in x.items():
+##        print(key,value)
+#        if value =='N':
+#            d[key]=value
+#            c+=1
+#        if (key%interval == 0 or key == 499) and key !=0:
+#            fina_dict[key]=c;
+#            c=0
+#        else:
+#             d[key]=value
+#    
+#    return fina_dict
+
+
+def probabilty(y,interval):
     prob={}
+    sumval=0
+    i=0
     for key,value in y.items(): 
-        prob[key]=value/500
-    
+        sumval+=value
+        i+=1
+        if i == interval :
+            prob[key]=sumval/500
+            sumval=0
+            i=0
+     
     return prob
   
 #
@@ -85,20 +105,81 @@ def probabilty(y):
 def consolidated_run(recv):
     run={}
     for i in range(0,len(recv)):
-        test=get_lb(recv[i])[2]         
-        d=get_agg_frame_loss(test,10)
-        t=probabilty(d)   
-        run[i]=t
+        test=get_frame_value(recv[i])[2]         
+        d=identify_loss_burst_intervals(test)
+        t=probabilty(d,1)   
+        run[i]=(sum(t.values())/float(len(t)))
+        
     
-    result=pd.DataFrame(run)
-    result['Interval']=result.index
-    result['mean_pmf']=result.loc[:, result.columns != 'Interval'].mean(axis=1)
+    result=run
+#    res=pd.DataFrame(result)
+#    res['Interval']=result.index
+#    result['0']=result['pmf']
+    
+#    result['pmf_sum']=result.loc[:, result.columns != 'Interval'].sum(axis=1)
+#    result['pmf']=result['pmf_sum']/(len(run)*500)
     
     return result  
+#
+#def get_loss_burst_len(run):
+#    count=0
+#    dict={}
+#    for key,value in run.items():
+#        if value == 'N':
+#            count+=1;
+#        if value =='Y' and count>1:
+#            dict[key]=count;
+#            count=0;
+#    return dict;
+#
+#
+#frame1=24
+#name= open("files/"+str(frame1)+"Mbps"+"_1.txt")
+#recv_1=file_read(name)
+#ret=consolidated_run(recv_1)
+#
+#
+#lists=ret.items()
+#x, y = zip(*lists)
+#plt.bar(x,y)
 
 
     
     
+               
+               
+
+
+     
+   
+    
+        
+        
+
+
+
+            
+               
+                    
+                    
+                
+                
+                
+                
+                
+            
+    
+    
+    
+
+
+
+#frame1=24
+#name= open("files/"+str(frame1)+"Mbps"+"_1.txt")
+#recv_1=file_read(name)
+#ret=consolidated_run(recv_1)
+#    
+#    
 
 
 
