@@ -66,8 +66,8 @@ for i in range(0,len(recv_4)):
 #========================================Pmf for All Runs per receiver==================##     
 for i in range(0,len(recv_1)):
     loss_burst=get_frame_value(recv_1[i])[2]
-    aggr_frame_loss=identify_loss_burst_intervals(loss_burst)
-    probability=probabilty(aggr_frame_loss,interval)
+    probability=probabilty_mass_function(loss_burst)
+#    probability=probabilty(aggr_frame_loss,interval)
     lists=probability.items()
     x, y = zip(*lists)
     plt.bar(x,y)
@@ -78,8 +78,7 @@ for i in range(0,len(recv_1)):
     plt.clf()
 for i in range(0,len(recv_2)):
     loss_burst=get_frame_value(recv_2[i])[2]
-    aggr_frame_loss=identify_loss_burst_intervals(loss_burst)
-    probability=probabilty(aggr_frame_loss,interval)
+    probability=probabilty_mass_function(loss_burst)
     lists=probability.items()
     x, y = zip(*lists)
     plt.bar(x,y)
@@ -90,8 +89,7 @@ for i in range(0,len(recv_2)):
     plt.clf()
 for i in range(0,len(recv_3)):
     loss_burst=get_frame_value(recv_3[i])[2]
-    aggr_frame_loss=identify_loss_burst_intervals(loss_burst)
-    probability=probabilty(aggr_frame_loss,interval)
+    probability=probabilty_mass_function(loss_burst)
     lists=probability.items()
     x, y = zip(*lists)
     plt.bar(x,y)
@@ -102,8 +100,7 @@ for i in range(0,len(recv_3)):
     plt.clf()
 for i in range(0,len(recv_4)):
     loss_burst=get_frame_value(recv_4[i])[2]
-    aggr_frame_loss=identify_loss_burst_intervals(loss_burst)
-    probability=probabilty(aggr_frame_loss,interval)
+    probability=probabilty_mass_function(loss_burst)
     lists=probability.items()
     x, y = zip(*lists)
     plt.bar(x,y)
@@ -157,54 +154,54 @@ plt.savefig('img/Node_4/Aggregated_pmf.png')
 plt.clf()
 
 #========================Loss Burst Plot==============
-for i in range(0,len(recv_1)):
-    loss_burst=get_frame_value(recv_1[i])[2]
-    aggr_frame_loss=identify_loss_burst_intervals(loss_burst)
-#    probability=probabilty(aggr_frame_loss)
-    lists=aggr_frame_loss.items()
-    x, y = zip(*lists)
-    plt.bar(x,y)
-    plt.xlabel('Interval', fontsize=18)
-    plt.ylabel('Loss Burst', fontsize=16)
-    plt.title('Node1:Loss BurstRun_No'+str(i))
-    plt.savefig('img/Node_1/Loss BurstRun_No'+str(i)+'.png')
-    plt.clf()
-for i in range(0,len(recv_2)):
-    loss_burst=get_frame_value(recv_2[i])[2]
-    aggr_frame_loss=identify_loss_burst_intervals(loss_burst)
-    lists=aggr_frame_loss.items()
-    x, y = zip(*lists)
-    plt.bar(x,y)
-    plt.xlabel('Interval', fontsize=18)
-    plt.ylabel('Loss Burst', fontsize=16)
-    plt.title('Node2:Loss BurstRun_No'+str(i))
-    plt.savefig('img/Node_2/Loss BurstRun_No'+str(i)+'.png')
-    plt.clf()
-for i in range(0,len(recv_3)):
-    loss_burst=get_frame_value(recv_3[i])[2]
-    aggr_frame_loss=identify_loss_burst_intervals(loss_burst)
-#    probability=probabilty(aggr_frame_loss)
-    lists=aggr_frame_loss.items()
-    x, y = zip(*lists)
-    plt.bar(x,y)
-    plt.xlabel('Interval', fontsize=18)
-    plt.ylabel('Loss Burst', fontsize=16)
-    plt.title('Node3:Loss BurstRun_No'+str(i))
-    plt.savefig('img/Node_3/Loss BurstRun_No'+str(i)+'.png')
-    plt.clf()
-for i in range(0,len(recv_4)):
-    loss_burst=get_frame_value(recv_4[i])[2]
-    aggr_frame_loss=identify_loss_burst_intervals(loss_burst)
-#    probability=probabilty(aggr_frame_loss)
-    lists=aggr_frame_loss.items()
-    x, y = zip(*lists)
-    plt.bar(x,y)
-    plt.xlabel('Interval', fontsize=18)
-    plt.ylabel('Loss Burst', fontsize=16)
-    plt.title('Node4:Loss BurstRun_No'+str(i))
-    plt.savefig('img/Node_4/Loss BurstRun_No'+str(i)+'.png')
-    plt.clf()
-
+#for i in range(0,len(recv_1)):
+#    loss_burst=get_frame_value(recv_1[i])[2]
+#    aggr_frame_loss=identify_loss_burst_intervals(loss_burst)
+##    probability=probabilty(aggr_frame_loss)
+#    lists=aggr_frame_loss.items()
+#    x, y = zip(*lists)
+#    plt.bar(x,y)
+#    plt.xlabel('Interval', fontsize=18)
+#    plt.ylabel('Loss Burst', fontsize=16)
+#    plt.title('Node1:Loss BurstRun_No'+str(i))
+#    plt.savefig('img/Node_1/Loss BurstRun_No'+str(i)+'.png')
+#    plt.clf()
+#for i in range(0,len(recv_2)):
+#    loss_burst=get_frame_value(recv_2[i])[2]
+#    aggr_frame_loss=identify_loss_burst_intervals(loss_burst)
+#    lists=aggr_frame_loss.items()
+#    x, y = zip(*lists)
+#    plt.bar(x,y)
+#    plt.xlabel('Interval', fontsize=18)
+#    plt.ylabel('Loss Burst', fontsize=16)
+#    plt.title('Node2:Loss BurstRun_No'+str(i))
+#    plt.savefig('img/Node_2/Loss BurstRun_No'+str(i)+'.png')
+#    plt.clf()
+#for i in range(0,len(recv_3)):
+#    loss_burst=get_frame_value(recv_3[i])[2]
+#    aggr_frame_loss=identify_loss_burst_intervals(loss_burst)
+##    probability=probabilty(aggr_frame_loss)
+#    lists=aggr_frame_loss.items()
+#    x, y = zip(*lists)
+#    plt.bar(x,y)
+#    plt.xlabel('Interval', fontsize=18)
+#    plt.ylabel('Loss Burst', fontsize=16)
+#    plt.title('Node3:Loss BurstRun_No'+str(i))
+#    plt.savefig('img/Node_3/Loss BurstRun_No'+str(i)+'.png')
+#    plt.clf()
+#for i in range(0,len(recv_4)):
+#    loss_burst=get_frame_value(recv_4[i])[2]
+#    aggr_frame_loss=identify_loss_burst_intervals(loss_burst)
+##    probability=probabilty(aggr_frame_loss)
+#    lists=aggr_frame_loss.items()
+#    x, y = zip(*lists)
+#    plt.bar(x,y)
+#    plt.xlabel('Interval', fontsize=18)
+#    plt.ylabel('Loss Burst', fontsize=16)
+#    plt.title('Node4:Loss BurstRun_No'+str(i))
+#    plt.savefig('img/Node_4/Loss BurstRun_No'+str(i)+'.png')
+#    plt.clf()
+#
 
 
 

@@ -53,101 +53,151 @@ def get_frame_value(run):
     return [x_axsi,bm,val]
 
 
-
-def identify_loss_burst_intervals(run):
+def probabilty_mass_function(run):
     count=0
+    total=0
     dict={}
     for key,value in run.items():
         if value == 'N':
             count+=1;
-        if (value == 'Y' and count>1):
-            dict[key]=count;
+            total+=1
+        if (value == 'Y' and count>1) or (key == 499 and count >1):
+            dict[key]=count/total;
             count=0;
+            total=0
+        else: 
+            total+=1
     return dict;
 
 
-#def get_agg_frame_loss(x,interval):
-#    
-#   
-#    fina_dict={}
-#    d={}
-#    c=0
-#    for key,value in x.items():
-##        print(key,value)
-#        if value =='N':
-#            d[key]=value
-#            c+=1
-#        if (key%interval == 0 or key == 499) and key !=0:
-#            fina_dict[key]=c;
-#            c=0
-#        else:
-#             d[key]=value
-#    
-#    return fina_dict
-
-
-def probabilty(y,interval):
-    prob={}
-    sumval=0
-    i=0
-    for key,value in y.items(): 
-        sumval+=value
-        i+=1
-        if i == interval :
-            prob[key]=sumval/500
-            sumval=0
-            i=0
-     
-    return prob
-  
 #
 #fig,ax=plt.subplots(nrows=2,ncols=1,sharex=False,sharey=True,squeeze=False)
 def consolidated_run(recv):
     run={}
     for i in range(0,len(recv)):
         test=get_frame_value(recv[i])[2]         
-        d=identify_loss_burst_intervals(test)
-        t=probabilty(d,1)   
-        run[i]=(sum(t.values())/float(len(t)))
+        d=probabilty_mass_function(test)
+#       t=probabilty(d,1)   
+        run[i]=(sum(d.values())/float(len(d)))
         
     
     result=run
-#    res=pd.DataFrame(result)
-#    res['Interval']=result.index
-#    result['0']=result['pmf']
-    
-#    result['pmf_sum']=result.loc[:, result.columns != 'Interval'].sum(axis=1)
-#    result['pmf']=result['pmf_sum']/(len(run)*500)
-    
+   
     return result  
-#
-#def get_loss_burst_len(run):
-#    count=0
-#    dict={}
-#    for key,value in run.items():
-#        if value == 'N':
-#            count+=1;
-#        if value =='Y' and count>1:
-#            dict[key]=count;
-#            count=0;
-#    return dict;
-#
-#
+
+### 3-Losses across all nodes 
+## 2- losses across three nodes 
+## 1- losses across two nodes
+
+def loss_Aggr_file_read(file,count):
+    line=file.readlines() 
+    lits={}
+    dict={}
+    get_val=0;
+
+    
+
+    for i in range(0,len(line)):
+
+        if "Run No" in line[i]:
+            new_str=int(line[i].split("Run No========")[1])
+            get_val=i+1;
+            while 'Run No' not in line[get_val] and get_val+1 <len(line):
+                get_line=line[get_val].split(",")
+                frame_no=int(get_line[0].split(":")[1])
+                loss_aggr_val=int(get_line[1].split(":")[1])
+                get_val+=1
+                lits[frame_no]=loss_aggr_val
+
+            dict[new_str]=lits
+            lits={}
+    dsf=pd.DataFrame(dict)
+    dsf['Frame_no']=dsf.index
+
+
+
+    for i in range(1,count):
+         #print(i)
+         s=str("Run_no"+str(i))
+         dsf[s]=dsf[i]
+         dsf.drop(columns =[i], inplace = True)
+   
+    x=dsf.iloc[:,1:count]
+    Tw_Recv=[5,6,7,9,10,11]
+    Three_Recv=[12,13,1,4,1,15]
+    for i, rows in x.iterrows():
+        count=0
+        #print(rows,i)
+        c=rows.value_counts()
+#        print(c)
+#        break
+#        print(c)                    
+        if 16 in c:
+           dsf.loc[i,'WorseCase']=c[16]
+        if 1 in c:
+               dsf.loc[i,'BestCase']=c[1]
+         
+        for k in range(0,len(Tw_Recv)):
+            if Tw_Recv[k] in c:
+#                print(c[Tw_Recv[k]])
+                count+=c[Tw_Recv[k]]
+        dsf.loc[i,'Two_Recv']=count
+        count=0
+       
+        for k in range(0,len(Three_Recv)):
+            if Three_Recv[k] in c:
+#                print(c[Tw_Recv[k]])
+                count+=c[Three_Recv[k]]
+        dsf.loc[i,'Three_Recv']=count
+        count=0
+        
+    X=dsf
+    return X
+
+
+## Two Recv 5,6,7,9,10,11
+## Three recv -12,13,1,4,1,15    
+def recv_combination_loss(datafra,combination):
+    if combination == 4:
+        datafra['Pmf_worse_case']=datafra['WorseCase']/len(ret.columns)
+        return datafra['Pmf_worse_case']
+        ## Add Logic here 
+    elif combination == 3 :
+       datafra['Pmf_Two_Recv']=datafra['Two_Recv']/len(ret.columns)
+       return datafra['Pmf_Two_Recv']
+       print('Dumb') 
+        ## Add Logic here 
+    elif combination == 2 :
+        datafra['Pmf_Three_Recv']=datafra['Three_Recv']/len(ret.columns)
+        return datafra['Pmf_Three_Recv']
+        print('Dumb')
+        ## Add Logic here 
+    
+    
+
+
+
+
 #frame1=24
-#name= open("files/"+str(frame1)+"Mbps"+"_1.txt")
-#recv_1=file_read(name)
-#ret=consolidated_run(recv_1)
+#interval=1
 #
+#name=open("files/"+str(frame1)+"Mbps"+"Data_Aggregation_Logs.txt","r")
+##name_1=open("files/"+str(frame1)+"Mbps"+"_2.txt")
+##name_2=open("files/"+str(frame1)+"Mbps"+"_3.txt")
+##name_3=open("files/"+str(frame1)+"Mbps"+"_4.txt")
+##
+#count=get_count(str(frame1))
+#count=count[0]
+#ret=loss_Aggr_file_read(name,count)
+#        
+#result=recv_combination_loss(ret,2)
 #
-#lists=ret.items()
-#x, y = zip(*lists)
-#plt.bar(x,y)
-
-
-    
-    
-               
-               
+#        
+#    
+#    
+#    
+#               
+#               
 
 
      
