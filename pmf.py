@@ -163,13 +163,13 @@ def recv_combination_loss(datafra,combination,count):
         datafra['Pmf_worse_case']=(datafra['WorseCase']/count)*100
         return datafra['Pmf_worse_case']
         ## Add Logic here 
-    elif combination == 3 :
+    elif combination == 2 :
        #s=datafra['Two_Recv'].sum()
        datafra['Pmf_Two_Recv']=(datafra['Two_Recv']/count)*100
        return datafra['Pmf_Two_Recv']
        print('Dumb') 
         ## Add Logic here 
-    elif combination == 2 :
+    elif combination == 3 :
        # s=datafra['Three_Recv'].sum()
         datafra['Pmf_Three_Recv']=(datafra['Three_Recv']/count)*100
         return datafra['Pmf_Three_Recv']
@@ -189,31 +189,50 @@ name=open("files/"+str(frame1)+"Mbps"+"Data_Aggregation_Logs.txt","r")
 
 count=get_count(str(frame1))
 count=count[0]
-ret=loss_Aggr_file_read(name,count)     
+ret=loss_Aggr_file_read(name,count)
+
+
 result=recv_combination_loss(ret,2,count)
-x,y=zip(*(result.items()))
+r=result.mean(axis=0)
+med=result.median(axis=0)
+min=result.min(axis=0)
+max=result.max(axis=0)
+print(r,med,min,max)
+#x,y=zip(*(result.items()))
+#plt.bar(x,y,color='blue',label='2 Recv')
+#plt.xlim([50,60])
+#plt.xlabel('Frame No')
+#plt.ylabel('% of times the frame was lost across 3 Recv')
+
+
+    
+rettt=recv_combination_loss(ret,3,count)
+r=rettt.mean(axis=0)
+med=rettt.median(axis=0)
+min=rettt.min(axis=0)
+max=rettt.max(axis=0)
+print(r,med,min,max)
+x,y=zip(*(rettt.items()))
+
 plt.bar(x,y)
 plt.xlabel('Frame No')
 plt.ylabel('% of times the frame was lost across 3 Recv')
-plt.show()
-
 
 #ret=loss_Aggr_file_read(name,count)     
-result=recv_combination_loss(ret,3,count)
-x,y=zip(*(result.items()))
-plt.bar(x,y)
-plt.xlabel('Frame No')
-plt.ylabel('% of times the frame was lost across 2 Recv')
-
-#ret=loss_Aggr_file_read(name,count)     
-result=recv_combination_loss(ret,4,count)
-x,y=zip(*(result.items()))
-plt.bar(x,y)
-plt.xlabel('Frame No')
-plt.ylabel('% of times the frame was lost across 4 Recv')
-
-
-#
+ws=recv_combination_loss(ret,4,count)
+x,y=zip(*(ws.items()))
+r=ws.mean(axis=0)
+med=ws.median(axis=0)
+min=ws.min(axis=0)
+max=ws.max(axis=0)
+print(r,med,min,max)
+#plt.bar(x,y,color='orange',label='4 Recv')
+#plt.xlabel('Frame No')
+#plt.ylabel('% of time frame loss across Recv Combo')
+#plt.xlim([0,50])
+#plt.legend()
+#plt.show()
+##
 #        
 #    
 #    
