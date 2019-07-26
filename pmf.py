@@ -96,7 +96,7 @@ def loss_Aggr_file_read(file,count):
     get_val=0;
 
     
-
+    
     for i in range(0,len(line)):
 
         if "Run No" in line[i]:
@@ -124,9 +124,9 @@ def loss_Aggr_file_read(file,count):
    
     x=dsf.iloc[:,1:count]
     Tw_Recv=[5,6,7,9,10,11]
-    Three_Recv=[12,13,1,4,1,15]
+    Three_Recv=[12,13,14,15]
     for i, rows in x.iterrows():
-        count=0
+        sum=0
         #print(rows,i)
         c=rows.value_counts()
 #        print(c)
@@ -140,57 +140,79 @@ def loss_Aggr_file_read(file,count):
         for k in range(0,len(Tw_Recv)):
             if Tw_Recv[k] in c:
 #                print(c[Tw_Recv[k]])
-                count+=c[Tw_Recv[k]]
-        dsf.loc[i,'Two_Recv']=count
-        count=0
+                sum+=c[Tw_Recv[k]]
+        dsf.loc[i,'Two_Recv']=sum
+        sum=0
        
         for k in range(0,len(Three_Recv)):
             if Three_Recv[k] in c:
 #                print(c[Tw_Recv[k]])
-                count+=c[Three_Recv[k]]
-        dsf.loc[i,'Three_Recv']=count
-        count=0
+                sum+=c[Three_Recv[k]]
+        dsf.loc[i,'Three_Recv']=sum
+        sum=0
         
     X=dsf
     return X
 
 
-## Two Recv 5,6,7,9,10,11
-## Three recv -12,13,1,4,1,15    
-def recv_combination_loss(datafra,combination):
+### Two Recv 5,6,7,9,10,11
+### Three recv -12,13,1,4,1,15    
+def recv_combination_loss(datafra,combination,count):
     if combination == 4:
-        datafra['Pmf_worse_case']=datafra['WorseCase']/len(ret.columns)
+        #s=datafra['WorseCase'].sum()
+        datafra['Pmf_worse_case']=(datafra['WorseCase']/count)*100
         return datafra['Pmf_worse_case']
         ## Add Logic here 
     elif combination == 3 :
-       datafra['Pmf_Two_Recv']=datafra['Two_Recv']/len(ret.columns)
+       #s=datafra['Two_Recv'].sum()
+       datafra['Pmf_Two_Recv']=(datafra['Two_Recv']/count)*100
        return datafra['Pmf_Two_Recv']
        print('Dumb') 
         ## Add Logic here 
     elif combination == 2 :
-        datafra['Pmf_Three_Recv']=datafra['Three_Recv']/len(ret.columns)
+       # s=datafra['Three_Recv'].sum()
+        datafra['Pmf_Three_Recv']=(datafra['Three_Recv']/count)*100
         return datafra['Pmf_Three_Recv']
         print('Dumb')
-        ## Add Logic here 
+        # Add Logic here 
     
     
 
 
 
 
-#frame1=24
+frame1=24
 #interval=1
 #
-#name=open("files/"+str(frame1)+"Mbps"+"Data_Aggregation_Logs.txt","r")
-##name_1=open("files/"+str(frame1)+"Mbps"+"_2.txt")
-##name_2=open("files/"+str(frame1)+"Mbps"+"_3.txt")
-##name_3=open("files/"+str(frame1)+"Mbps"+"_4.txt")
-##
-#count=get_count(str(frame1))
-#count=count[0]
-#ret=loss_Aggr_file_read(name,count)
-#        
-#result=recv_combination_loss(ret,2)
+name=open("files/"+str(frame1)+"Mbps"+"Data_Aggregation_Logs.txt","r")
+
+
+count=get_count(str(frame1))
+count=count[0]
+ret=loss_Aggr_file_read(name,count)     
+result=recv_combination_loss(ret,2,count)
+x,y=zip(*(result.items()))
+plt.bar(x,y)
+plt.xlabel('Frame No')
+plt.ylabel('% of times the frame was lost across 3 Recv')
+plt.show()
+
+
+#ret=loss_Aggr_file_read(name,count)     
+result=recv_combination_loss(ret,3,count)
+x,y=zip(*(result.items()))
+plt.bar(x,y)
+plt.xlabel('Frame No')
+plt.ylabel('% of times the frame was lost across 2 Recv')
+
+#ret=loss_Aggr_file_read(name,count)     
+result=recv_combination_loss(ret,4,count)
+x,y=zip(*(result.items()))
+plt.bar(x,y)
+plt.xlabel('Frame No')
+plt.ylabel('% of times the frame was lost across 4 Recv')
+
+
 #
 #        
 #    
@@ -198,31 +220,6 @@ def recv_combination_loss(datafra,combination):
 #    
 #               
 #               
-
-
-     
-   
-    
-        
-        
-
-
-
-            
-               
-                    
-                    
-                
-                
-                
-                
-                
-            
-    
-    
-    
-
-
 
 #frame1=24
 #name= open("files/"+str(frame1)+"Mbps"+"_1.txt")
