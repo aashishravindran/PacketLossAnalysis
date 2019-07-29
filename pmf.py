@@ -39,13 +39,13 @@ def get_frame_value(run):
     val={}
     for i in range(0,500):
         if i not in run:
-            bm.append('Y')
-            val[i]='Y'
+            bm.append('N')
+            val[i]='N'
             x_axsi.append(i)
             
         else:
-            bm.append('N')
-            val[i]='N'
+            bm.append('Y')
+            val[i]='Y'
             x_axsi.append(i)
     
          
@@ -180,52 +180,52 @@ def recv_combination_loss(datafra,combination,count):
 
 
 
-
-frame1=24
-#interval=1
 #
-name=open("files/"+str(frame1)+"Mbps"+"Data_Aggregation_Logs.txt","r")
-
-
-count=get_count(str(frame1))
-count=count[0]
-ret=loss_Aggr_file_read(name,count)
-
-
-result=recv_combination_loss(ret,2,count)
-r=result.mean(axis=0)
-med=result.median(axis=0)
-min=result.min(axis=0)
-max=result.max(axis=0)
-print(r,med,min,max)
-#x,y=zip(*(result.items()))
-#plt.bar(x,y,color='blue',label='2 Recv')
-#plt.xlim([50,60])
+#frame1=24
+##interval=1
+##
+#name=open("files/"+str(frame1)+"Mbps"+"Data_Aggregation_Logs.txt","r")
+#
+#
+#count=get_count(str(frame1))
+#count=count[0]
+#ret=loss_Aggr_file_read(name,count)
+#
+#
+#result=recv_combination_loss(ret,2,count)
+#r=result.mean(axis=0)
+#med=result.median(axis=0)
+#min=result.min(axis=0)
+#max=result.max(axis=0)
+#print(r,med,min,max)
+##x,y=zip(*(result.items()))
+##plt.bar(x,y,color='blue',label='2 Recv')
+##plt.xlim([50,60])
+##plt.xlabel('Frame No')
+##plt.ylabel('% of times the frame was lost across 3 Recv')
+#
+#
+#    
+#rettt=recv_combination_loss(ret,3,count)
+#r=rettt.mean(axis=0)
+#med=rettt.median(axis=0)
+#min=rettt.min(axis=0)
+#max=rettt.max(axis=0)
+#print(r,med,min,max)
+#x,y=zip(*(rettt.items()))
+#
+#plt.bar(x,y)
 #plt.xlabel('Frame No')
 #plt.ylabel('% of times the frame was lost across 3 Recv')
-
-
-    
-rettt=recv_combination_loss(ret,3,count)
-r=rettt.mean(axis=0)
-med=rettt.median(axis=0)
-min=rettt.min(axis=0)
-max=rettt.max(axis=0)
-print(r,med,min,max)
-x,y=zip(*(rettt.items()))
-
-plt.bar(x,y)
-plt.xlabel('Frame No')
-plt.ylabel('% of times the frame was lost across 3 Recv')
-
-#ret=loss_Aggr_file_read(name,count)     
-ws=recv_combination_loss(ret,4,count)
-x,y=zip(*(ws.items()))
-r=ws.mean(axis=0)
-med=ws.median(axis=0)
-min=ws.min(axis=0)
-max=ws.max(axis=0)
-print(r,med,min,max)
+#
+##ret=loss_Aggr_file_read(name,count)     
+#ws=recv_combination_loss(ret,4,count)
+#x,y=zip(*(ws.items()))
+#r=ws.mean(axis=0)
+#med=ws.median(axis=0)
+#min=ws.min(axis=0)
+#max=ws.max(axis=0)
+#print(r,med,min,max)
 #plt.bar(x,y,color='orange',label='4 Recv')
 #plt.xlabel('Frame No')
 #plt.ylabel('% of time frame loss across Recv Combo')
@@ -386,3 +386,52 @@ print(r,med,min,max)
 #for index,row in res.iterrows():
 #    
 
+
+
+##========================================Pmf for All Runs per receiver==================##     
+#for i in range(0,len(recv_1)):
+#    loss_burst=get_frame_value(recv_1[i])[2]
+#    probability=probabilty_mass_function(loss_burst)
+##    probability=probabilty(aggr_frame_loss,interval)
+#    lists=probability.items()
+#    x, y = zip(*lists)
+#    plt.bar(x,y)
+#    plt.xlabel('Interval', fontsize=18)
+#    plt.ylabel('PMF of Lost Frames', fontsize=16)
+#    plt.title('Node1:PMF_of_lost_frames_for_Run_No'+str(i))
+#    plt.savefig('img/Node_1/PMF_of_lost_frames_for_Run_N0'+str(i)+'.png')
+#    plt.clf()
+#for i in range(0,len(recv_2)):
+#    loss_burst=get_frame_value(recv_2[i])[2]
+#    probability=probabilty_mass_function(loss_burst)
+#    lists=probability.items()
+#    x, y = zip(*lists)
+#    plt.bar(x,y)
+#    plt.xlabel('Interval', fontsize=18)
+#    plt.ylabel('PMF of Lost Frames', fontsize=16)
+#    plt.title('Node2:PMF_of_lost_frames_for_Run_No'+str(i))
+#    plt.savefig('img/Node_2/PMF_of_lost_frames_for_Run_N0'+str(i)+'.png')
+#    plt.clf()
+#for i in range(0,len(recv_3)):
+#    loss_burst=get_frame_value(recv_3[i])[2]
+#    probability=probabilty_mass_function(loss_burst)
+#    lists=probability.items()
+#    x, y = zip(*lists)
+#    plt.bar(x,y)
+#    plt.xlabel('Interval', fontsize=18)
+#    plt.ylabel('PMF of Lost Frames', fontsize=16)
+#    plt.title('Node3:PMF_of_lost_frames_for_Run_No'+str(i))
+#    plt.savefig('img/Node_3/PMF_of_lost_frames_for_Run_N0'+str(i)+'.png')
+#    plt.clf()
+#for i in range(0,len(recv_4)):
+#    loss_burst=get_frame_value(recv_4[i])[2]
+#    probability=probabilty_mass_function(loss_burst)
+#    lists=probability.items()
+#    x, y = zip(*lists)
+#    plt.bar(x,y)
+#    plt.xlabel('Interval', fontsize=18)
+#    plt.ylabel('PMF of Lost Frames', fontsize=16)
+#    plt.title('Node3:PMF_of_lost_frames_for_Run_No'+str(i))
+#    plt.savefig('img/Node_4/PMF_of_lost_frames_for_Run_N0'+str(i)+'.png')
+#    plt.clf()
+##========================================Get Consolidate Runs=============

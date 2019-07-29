@@ -144,15 +144,15 @@ for k,j in  enumerate(dict):
     loss_Aggregation[j]=run; #Assign the array to the Hash Map
     
 #print(loss_Aggregation)
-file=open("files/"+frame_rate+"Mbps"+"Data_Aggregation_Logs.txt","w")
-file.write(frame_rate+"MbpsLogs\n")
-
-for i, k in enumerate(loss_Aggregation):
-    print("==============Run No========",k)
-    file.write("==============Run No========"+str(k)+"\n")
-    new=loss_Aggregation[k];
-    for i in range(0,500):
-        print("Index: "+str(i)+" Value:"+str(new[i]))
-        file.write("Index:"+str(i)+","+"Value:"+str(new[i])+"\n")
-
-file.close()
+#file=open("files/"+frame_rate+"Mbps"+"Data_Aggregation_Logs.txt","w")
+#file.write(frame_rate+"MbpsLogs\n")
+#
+#for i, k in enumerate(loss_Aggregation):
+#    print("==============Run No========",k)
+#    file.write("==============Run No========"+str(k)+"\n")
+#    new=loss_Aggregation[k];
+#    for i in range(0,500):
+#        print("Index: "+str(i)+" Value:"+str(new[i]))
+#        file.write("Index:"+str(i)+","+"Value:"+str(new[i])+"\n")
+#
+#file.close()
