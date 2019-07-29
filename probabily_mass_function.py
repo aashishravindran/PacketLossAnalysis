@@ -95,27 +95,3 @@ def most_frequent_losses_pmf(recv,mf,total_runs):
     return k
 
     
-#
-#
-#
-#frame1=24
-#interval=1
-#
-#name= open("files/"+str(frame1)+"Mbps"+"_1.txt")
-#name_1=open("files/"+str(frame1)+"Mbps"+"_2.txt")
-#name_2=open("files/"+str(frame1)+"Mbps"+"_3.txt")
-#name_3=open("files/"+str(frame1)+"Mbps"+"_4.txt")
-#
-#
-#recv_1=file_read(name)
-#recv_2=file_read(name_1)
-#recv_3=file_read(name_2)
-#recv_4=file_read(name_3)
-#
-#
-#ret=get_allruns(recv_1)     
-#k= most_frequent_losses_pmf(ret,10,23)
-#x,y=zip(*k)
-#plt.bar(x,y)
-#        
-
