@@ -16,5 +16,6 @@ graph.py
 test.py
 patternRecognition.py
 new.py
+kMeans.py
 venv
 __pycache__
