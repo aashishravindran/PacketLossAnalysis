@@ -13,6 +13,7 @@ from imports import get_retransmission_delays,time_sync,reference_ts
 
 
 def parse_tf_and_get_ts(reference_map, file_to_sync):
+    ##Parses a text file and calls the time sync function which sync wrt to the reference ts
     ls = file_to_sync.readlines()
     seq = []
     times = []
@@ -22,6 +23,7 @@ def parse_tf_and_get_ts(reference_map, file_to_sync):
     for i in range(0, len(ls)):
 
         if "Starting" in ls[i]:
+            ### pass the value per run into ts func and get sync time time stamps
             reference = reference_map[count]
             sync = time_sync(reference, times)
             val = [seq, sync] ## 2D Array containing seq and synchronized time Stamps
@@ -37,7 +39,6 @@ def parse_tf_and_get_ts(reference_map, file_to_sync):
     return SyncLog
 # ==================Call Transmission Delay and Print Value======================================================
 
-
 def execute_delay_fn_print(ref,recv):
       dictionary = {}
       for key, value in enumerate(recv):
@@ -45,8 +46,6 @@ def execute_delay_fn_print(ref,recv):
             # break
             dictionary[key] = get_retransmission_delays(ref[key], recv[key])
       return dictionary
-
-
 
 file=open ('files/ts_logs/time_sync.txt','r')
 Sync_log_1 = open('files/ts_logs/time_sync_1.txt','r')
@@ -59,6 +58,8 @@ reference_map = reference_ts(line) # Passing the reference file to get time Stam
 ref=parse_tf_and_get_ts(reference_map,Sync_log_1) # Time Sync for Recv 1
 recv_1=parse_tf_and_get_ts(reference_map,Sync_log_2) # Time Sync for Recv 2
 
+
+## Please make sure receivers are synchdromnized before calculating receiver delays
 receiver_delay=execute_delay_fn_print(ref,recv_1) # Receiver Delay Between Receivers
 
 print(receiver_delay[0])

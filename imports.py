@@ -20,6 +20,7 @@ def reference_ts(line):
 
 
 def get_retransmission_delays(ref,sync):
+    ## Looks at time difference between a frame appearing in recv 1 with the same frame appearing in recv 
     difference = []
     delay = {}
     for i in range(0, len(sync)):
@@ -37,11 +38,11 @@ def get_retransmission_delays(ref,sync):
 def time_sync(reference, time_stamps):
     synchronied_timestamp = []
     for index,timestamp in enumerate(time_stamps):
-        if index == 0:
+        if index == 0: # if first value the compute the sync count 
             count=timestamp-reference
             sync_count = timestamp-count
             synchronied_timestamp.append(sync_count) #Time Sync Logic
-        else:
+        else: #else used previously calculated count
             next_time_stamp = timestamp-sync_count #Time Sync Logic
             final_count = timestamp+next_time_stamp
             synchronied_timestamp.append(final_count)
