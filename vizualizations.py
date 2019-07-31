@@ -12,8 +12,14 @@ import numpy as np
 from probabily_mass_function import *
 
 
-
 def plot_data_master(recv,path_to_file,anatype):
+    """
+    1) This function plots two types of vizualizations one is the raw data per run
+    2) Pmf for burst len and interval for per run
+    3) Inputs : receiver{},path to file ->string and type of analysys
+    4)rtype 0
+    
+    """
     ## anatype =1 for ray data
     if anatype==1:
         for i in range(0,len(recv)):
@@ -48,7 +54,12 @@ def plot_data_master(recv,path_to_file,anatype):
         
     return 0;
 
-def plot_consolidated_run_master(arr,path):
+def plot_consolidated_run_master(receivers,path):
+    """
+    this function plots across all runs the pmf for burst len and interval per receiver
+    input: Array of all receivers raw Data 'Y' and 'N'
+    rtype= none    
+    """ 
     ## Aggragated Pmf Master
     nrows=4
     ncols =2
@@ -58,14 +69,14 @@ def plot_consolidated_run_master(arr,path):
     while i < nrows:
         j=0
         while j < ncols:
-            recv=get_allruns(arr[i])
-            ret=consolidated_pmf(recv,1)[0]
+            receiver=get_allruns(receivers[i])
+            ret=consolidated_pmf(receiver,1)[0]
             lists=ret.items()
             x,y=zip(*lists)
             ax[i][j].bar(x,y)
             ax[i][j].set_title('Burst Len  Vs Pmf across all runs Node'+str(i+1),fontsize=10,pad=-10)  
             j+=1
-            ret=consolidated_pmf(recv,2)[0]
+            ret=consolidated_pmf(receiver,2)[0]
             lists=ret.items()
             x,y=zip(*lists)
             ax[i][j].bar(x,y)

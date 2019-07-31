@@ -10,17 +10,24 @@ from collections import Counter
 import matplotlib.pyplot as plt
 import statistics
 
-def loss_Aggr_file_read(file,count):
+def loss_Aggr_file_read(file,noofruns):
+    """
+    Reads the results of loss aggregation and computes at a frame level across runs and across receivers, the number of frames
+    lost across any 2 any 3 and all 4 receivers. 
+    Note: It is imperative to run loss aggration before running this
+    Note: Number of runs must be same across all receivers
+    input: file object, Number of runs    
+    rtype: Pandas Data Frame
+    """
+    
     ## Read and format the file
     line=file.readlines() 
     lits={}
     dict={}
-    get_val=0;
-
-    
-    
+    get_val=0;       
     for i in range(0,len(line)):
-
+        
+        #parsing the text file
         if "Run No" in line[i]:
             new_str=int(line[i].split("Run No========")[1])
             get_val=i+1;
@@ -38,15 +45,17 @@ def loss_Aggr_file_read(file,count):
 
 
 
-    for i in range(1,count):
+    for i in range(1,noofruns):
          #print(i)
          s=str("Run_no"+str(i))
          dsf[s]=dsf[i]
          dsf.drop(columns =[i], inplace = True)
    
-    x=dsf.iloc[:,1:count]
+    x=dsf.iloc[:,1:noofruns]
+    
     Tw_Recv=[5,6,7,9,10,11]
     Three_Recv=[12,13,14,15]
+    
     for i, rows in x.iterrows():
         sum=0
         #print(rows,i)
@@ -78,29 +87,37 @@ def loss_Aggr_file_read(file,count):
 
 ### Two Recv 5,6,7,9,10,11
 ### Three recv -12,13,1,4,1,15    
-def recv_combination_loss(datafra,combination,count):
+def recv_combination_loss(datafra,combination,NoOfRuns):
+    
+    """
+    Calcualates percentage for two three and four receivers cases
+    it is imperate to run loss_Aggr_file_read before runnting this function
+    Input: DataFrame from loss Aggregation, combination->type of analysts to perform 2Recv loss,3 RecvLoss 4 Recv Loss
+    ,no of runs
+    rtype:dataframe
+    """
     ## Pmf Receiver Combination
     if combination == 4:
         #s=datafra['WorseCase'].sum()
-        datafra['Pmf_worse_case']=(datafra['WorseCase']/count)*100
+        datafra['Pmf_worse_case']=(datafra['WorseCase']/NoOfRuns)*100
         return datafra['Pmf_worse_case']
         ## Add Logic here 
     elif combination == 2 :
        #s=datafra['Two_Recv'].sum()
-       datafra['Pmf_Two_Recv']=(datafra['Two_Recv']/count)*100
+       datafra['Pmf_Two_Recv']=(datafra['Two_Recv']/NoOfRuns)*100
        return datafra['Pmf_Two_Recv']
-       print('Dumb') 
+       
         ## Add Logic here 
     elif combination == 3 :
        # s=datafra['Three_Recv'].sum()
-        datafra['Pmf_Three_Recv']=(datafra['Three_Recv']/count)*100
+        datafra['Pmf_Three_Recv']=(datafra['Three_Recv']/NoOfRuns)*100
         return datafra['Pmf_Three_Recv']
-        print('Dumb')
-
-
-
+        
 
 def file_read(file):
+    """
+    Reads a file and returns a dictionaary containgin run No and seqNo received for each run
+    """
     #Receiver Level
     line=file.readlines()
     count=0;
@@ -115,12 +132,14 @@ def file_read(file):
             val=int((line[i].split('and')[0]).split('=')[1])
             seqNo.append(val)
     return dict
-        
-    
-    
-def get_frame_value(run):  
-    ##Run Level
-    ### This function gets the raw data value, append 'Y' if recevied else 'N' if not received===================
+            
+def get_frame_value(run):
+    """
+    get_frame_value retruns a dictionary of raw values
+    Run Level
+    This function gets the raw data value, append 'Y' if recevied else 'N' if not received
+    """   
+   
     x_axsi=[]
     bm=[]
     val={}
@@ -141,14 +160,15 @@ def get_frame_value(run):
 
 
 def loss_burst_pmf(run):
+    
     ###Run Level
-    # Computes the pmf of loss burst len
+    #Computes the pmf of loss burst len
     count=0
     arr=[]
     pmf={}
     for i in range(0,len(run)):
         
-        if run[i] == 'Y' and count >1:
+        if run[i] == 'Y':
             arr.append(count)
             count=0
         if run[i] == 'N':
@@ -160,9 +180,7 @@ def loss_burst_pmf(run):
 #        print(key,value)
         pmf[key]=(value/len(arr))
         
-#    loss_burst=pd.DataFrame(loss_burst[0].value_counts())
-#    loss_burst.columns=["Counts"]
-#    loss_burst['pmf']=loss_burst['Counts']/length
+
     return pmf
 
 def loss_burst_interval(run):
@@ -172,7 +190,7 @@ def loss_burst_interval(run):
     arr=[]
     pmf={}
     for i in range(0,len(run)):
-        if (run[i] == 'N' and count >1):
+        if (run[i] == 'N'):
             arr.append(count)
             count=0
         if run[i] == 'Y':
@@ -195,8 +213,11 @@ def get_allruns(recv):
     
 
 def consolidated_pmf(recv,val):
+    """
+    Used to compute the pmf and interval for all runs per receiver
+    """
     #Receiver level
-    # used to compuet pms and interval across all runs
+    # used to compuet pmf and interval across all runs
     arr=[]
     stats=[]
     for key,value in recv.items():
@@ -215,6 +236,9 @@ def consolidated_pmf(recv,val):
         return [interval,stats]
 
 def across_all_recv(recv_arr,val):
+    """
+    This function computest the loss burst pmf and intervals across all recveicvers
+    """
     ##Frame rate Level
     #consolidetd pmf and interval for all runs across all receivers
     arr=[]
@@ -228,7 +252,7 @@ def across_all_recv(recv_arr,val):
         return loss_burst_interval(arr)
                                          
 
-def most_frequent_losses_pmf(recv,mf,total_runs):
+def most_frequent_losses_pmf(recv,top_n_value,total_runs):
     ## Recevier Level
     ##Please Run 'Get All Runs Befeore Running This'
     ## this function can help identify the Frames which have the highest probabilty of being lost for a frame rate/ receiver
@@ -247,7 +271,23 @@ def most_frequent_losses_pmf(recv,mf,total_runs):
 
     for key,value in dict.items():
         dict[key]=value/total_runs
-    k=Counter(dict).most_common(mf)  
+    k=Counter(dict).most_common(top_n_value)  
     return k
 
+
+def bad_runs(recv):
+    """
+    Function to computer percentage of bad Runs per Recv
+    """
+    
+    arr=[]
+    dict={}
+    for key,value in recv.items():
+        for i,val in enumerate(value):
+            if val =='N':
+#            st=str(i)+str(val)
+                arr.append(i)
+    dict[key]=(len(arr)/500)*100
+    arr=[]
+    return dict
     

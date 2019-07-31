@@ -89,7 +89,7 @@ for i,value in enumerate(arr):
 path=dirName
 plot_consolidated_run_master(arr,path) 
 ## Needs to be call with an array containg all receivers
-#==================================Get All Runs================================
+#==================================Get All Runs and  plot  top n values================================
 k=10;
 c=get_count(str(frame1))[1]
 
@@ -155,115 +155,36 @@ plt.show()
 plt.legend()
 plt.clf()
 #==========================================% Bad Runs==========================
-frame1=1
-
-name= open("files/"+str(frame1)+"Mbps"+"_1.txt")
-name_1=open("files/"+str(frame1)+"Mbps"+"_2.txt")
-name_2=open("files/"+str(frame1)+"Mbps"+"_3.txt")
-name_3=open("files/"+str(frame1)+"Mbps"+"_4.txt")
-
-
-recv_1=file_read(name)
-recv_2=file_read(name_1)
-recv_3=file_read(name_2)
-recv_4=file_read(name_3)
-
-rec1=get_allruns(recv_1)
+##Code to be fixed
 arr=[]
-
-dict={}
-err={}
-for key,value in rec1.items():
-    for i,val in enumerate(value):
-        if val =='N':
-#            st=str(i)+str(val)
-            arr.append(i)
-    dict[key]=(len(arr)/500)*100
-    arr=[]
+arr.extend([get_allruns(recv_1),get_allruns(recv_2),get_allruns(recv_3),get_allruns(recv_4)])
+col=['blue','red','cyan','magenta']
+for idx,i in enumerate(arr):
+    ret=bad_runs(i)   
+    x,y=zip(*(ret.items()))            
+    plt.plot(x,y,label='Recv1',color=col[idx])
+    print(statistics.mean(y))
  
 
-x,y=zip(*(dict.items()))            
-plt.plot(x,y,label='Recv1',color='blue')
-print(statistics.mean(y))
 
 
-rec1=get_allruns(recv_2)
-arr=[]
-dict={}
-for key,value in rec1.items():
-    for i,val in enumerate(value):
-        if val =='N':
-#            st=str(i)+str(val)
-            arr.append(i)
-    dict[key]=(len(arr)/500)*100
-    arr=[]
-       
-x,y=zip(*(dict.items()))            
-plt.plot(x,y,label='Recv2',color='red')
-print(statistics.mean(y))
-
-
-
-rec1=get_allruns(recv_3)
-arr=[]
-dict={}
-for key,value in rec1.items():
-    for i,val in enumerate(value):
-        if val =='N':
-#            st=str(i)+str(val)
-            arr.append(i)
-    dict[key]=(len(arr)/500)*100
-    arr=[]
-       
-x,y=zip(*(dict.items()))            
-plt.plot(x,y,label='Recv3',color='green')
-print(statistics.mean(y))
-
-
-rec1=get_allruns(recv_4)
-arr=[]
-dict={}
-for key,value in rec1.items():
-    for i,val in enumerate(value):
-        if val =='N':
-#            st=str(i)+str(val)
-            arr.append(i)
-    dict[key]=(len(arr)/500)*100
-    arr=[]
-       
-x,y=zip(*(dict.items()))            
-print(statistics.mean(y))
-plt.plot(x,y,label='Recv4',color='orange')
-plt.legend()
 #====Interval and Burst len consolidated probabiltiy accross all recv===========================================
-frame1=24
-recv_arr=[]
-name= open("files/"+str(frame1)+"Mbps"+"_1.txt")
-name_1=open("files/"+str(frame1)+"Mbps"+"_2.txt")
-name_2=open("files/"+str(frame1)+"Mbps"+"_3.txt")
-name_3=open("files/"+str(frame1)+"Mbps"+"_4.txt")
-
-
-recv_1=file_read(name)
-recv_2=file_read(name_1)
-recv_3=file_read(name_2)
-recv_4=file_read(name_3)
-
-
-rec1=get_allruns(recv_1)
-
-rec2=get_allruns(recv_2)
-
-rec3=get_allruns(recv_3)
-
-rec4=get_allruns(recv_4)
-
-recv_arr.extend([rec1,rec2,rec3,rec4])
-ret=across_all_recv(recv_arr,1)
-x,y=zip(*(ret.items()))
-plt.bar(x,y,label='Bursrt Len',color='blue')
-
-ret=across_all_recv(recv_arr,2)
-x,y=zip(*(ret.items()))
-plt.scatter(x,y,label='Interval',color='orange')
-plt.legend()
+#Code TBD
+#
+#rec1=get_allruns(recv_1)
+#
+#rec2=get_allruns(recv_2)
+#
+#rec3=get_allruns(recv_3)
+#
+#rec4=get_allruns(recv_4)
+#
+#recv_arr.extend([rec1,rec2,rec3,rec4])
+#ret=across_all_recv(recv_arr,1)
+#x,y=zip(*(ret.items()))
+#plt.bar(x,y,label='Bursrt Len',color='blue')
+#
+#ret=across_all_recv(recv_arr,2)
+#x,y=zip(*(ret.items()))
+#plt.scatter(x,y,label='Interval',color='orange')
+#plt.legend()

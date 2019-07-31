@@ -8,6 +8,12 @@ Created on Thu Jul  4 09:52:50 2019
 # Created for Time Synchronization and Delay
 
 def reference_ts(file):
+    """
+    Input file object
+    rtype: list[reference Time Stammps]
+    reference time stamps give the first value of frame reception after a new run 
+    Used for time sync delay calclualtion 
+    """
     line=file.readlines()
     reference_timestamps = [];
     for i in range(0, len(line)):
@@ -46,9 +52,13 @@ def get_retransmission_delays(ref,sync):
 
 
 def time_sync(reference, time_stamps):
+    """
+    Input reference time stamps[arr], time Stamps per run[arr] 
+    rtype: sync time stamps
+    """
     synchronied_timestamp = []
     for index,timestamp in enumerate(time_stamps):
-        if index == 0: # if first value the compute the sync count 
+        if index == 0: # if first value the compute the sync count->sync_count
             count=timestamp-reference
             sync_count = timestamp-count
             synchronied_timestamp.append(sync_count) #Time Sync Logic
