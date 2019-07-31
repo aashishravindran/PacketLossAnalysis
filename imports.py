@@ -7,7 +7,8 @@ Created on Thu Jul  4 09:52:50 2019
 """
 # Created for Time Synchronization and Delay
 
-def reference_ts(line):
+def reference_ts(file):
+    line=file.readlines()
     reference_timestamps = [];
     for i in range(0, len(line)):
         # print(i,line[i])
@@ -20,15 +21,24 @@ def reference_ts(line):
 
 
 def get_retransmission_delays(ref,sync):
-    ## Looks at time difference between a frame appearing in recv 1 with the same frame appearing in recv 
+    """ Calculate the retransmision delay per run for a receiver wrt to a reference,
+    Input type 1= 2D Array containing seq and time stamp for reference
+    Input type 2= 2D Array containing seq and time stamp for receiver to be synced
+    rtype d{seq,delay}
+    """
     difference = []
     delay = {}
+#    print(sync[1][1])
+#    return 0
     for i in range(0, len(sync)):
+        
         for j in range(0, len(sync[i])):
-            # print(sync[i][j])
-            # print(sync[i+1][j])
+            
+            # check if seq no exist  in ref sync[i][j] ->seq  ,ref[0] is seq No of reference
             if sync[i][j] in ref[0]:
-                diff = sync[i + 1][j] - ref[1][ref[0].index(sync[i][j])] #calculate Time Difference
+                print(sync[1][j])
+                ## diff = first timestamp
+                diff =  abs(ref[1][ref[0].index(sync[i][j])]-sync[1][j])
                 # print(diff)
                 difference.append(diff)
                 delay[sync[i][j]] = diff ##Append to dictionary with seqnece Number and Delay
