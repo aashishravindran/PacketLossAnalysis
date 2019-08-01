@@ -168,12 +168,15 @@ def loss_burst_pmf(run):
     pmf={}
     for i in range(0,len(run)):
         
-        if run[i] == 'Y':
+        if run[i] == 'Y'and count>=1:
             arr.append(count)
             count=0
         if run[i] == 'N':
             count+=1
     loss_burst=Counter(arr)
+    print(loss_burst)
+    print("============")
+    print(len(arr))
 
     
     for key,value in loss_burst.items():
@@ -190,7 +193,7 @@ def loss_burst_interval(run):
     arr=[]
     pmf={}
     for i in range(0,len(run)):
-        if (run[i] == 'N'):
+        if (run[i] == 'N') and count>=1:
             arr.append(count)
             count=0
         if run[i] == 'Y':
@@ -227,7 +230,7 @@ def consolidated_pmf(recv,val):
         burstlen=loss_burst_pmf(arr)
         b=burstlen.values()
         stats.extend([max(b),min(b),statistics.median(b),statistics.mean(b)]) #some statistical implementaiton used later
-        print(stats)
+       # print(stats)
         return [burstlen,stats]  #some statistical implementaiton
     else:
         interval=loss_burst_interval(arr)
@@ -275,19 +278,20 @@ def most_frequent_losses_pmf(recv,top_n_value,total_runs):
     return k
 
 
-def bad_runs(recv):
+def bad_runs_across_runs(recv):
     """
-    Function to computer percentage of bad Runs per Recv
+    Function to compute percentage of lost frames per Runs per Recv
     """
     
-    arr=[]
+    count=0
     dict={}
     for key,value in recv.items():
         for i,val in enumerate(value):
             if val =='N':
 #            st=str(i)+str(val)
-                arr.append(i)
-    dict[key]=(len(arr)/500)*100
-    arr=[]
+               count+=1
+        dict[key]=(count/500)*100
+        count=0
+    
     return dict
     
