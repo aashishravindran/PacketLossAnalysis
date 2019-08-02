@@ -174,9 +174,9 @@ def loss_burst_pmf(run):
         if run[i] == 'N':
             count+=1
     loss_burst=Counter(arr)
-    print(loss_burst)
-    print("============")
-    print(len(arr))
+#    print(loss_burst)
+#    print("============")
+#    print(len(arr))
 
     
     for key,value in loss_burst.items():

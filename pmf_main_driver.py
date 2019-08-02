@@ -21,7 +21,7 @@ import statistics
 
 
 
-frame1=1
+frame1=48
 dirName='img/'+str(frame1)+'Mbps'
 
 try:
@@ -129,7 +129,7 @@ plt.clf()
 
 #==================================================Avergat Burst Leb size======
 ##Frame Rate Level
-x=['Max','Min','Mean','Average']
+x=['Max','Min','Median','Average']
 re1=consolidated_pmf(rec1,1)[1]
 plt.bar(x,re1,label='recv_1',color='blue')
 re2=consolidated_pmf(rec2,1)[1]
@@ -141,11 +141,11 @@ plt.bar(x,re4,label='recv_4',color='orange')
 plt.legend()
 plt.xlabel('Min,Max,Avg,Median burst len across receivers')
 plt.xlabel('Pmf')
-plt.title("Statistical Highlights of Pmfs across receivers for"+str(frame1)+" Mbps")
+plt.title("Statistical Highlights of Pmfs of Burst Len across receivers for"+str(frame1)+" Mbps")
 plt.savefig(str(dirName)+'/'+'Burst_len_'+str(frame1)+'Mbps.png')
 plt.clf()
 #=================================================Interval=====================
-x=['Max','Min','Mean','Average']
+x=['Max','Min','Median','Average']
 re1=consolidated_pmf(rec1,2)[1]
 plt.bar(x,re1,label='recv_1',color='blue')
 re2=consolidated_pmf(rec2,2)[1]
@@ -157,7 +157,7 @@ plt.bar(x,re4,label='recv_4',color='orange')
 plt.legend()
 plt.xlabel('Min,Max,Avg,Median Interval across receivers')
 plt.xlabel('Pmf')
-plt.title("Statistical Highlights of Pmfs across receivers for"+str(frame1)+" Mbps")
+plt.title("Statistical Highlights of Pmfs of Interval across receivers for"+str(frame1)+" Mbps")
 plt.savefig(str(dirName)+'/'+'Interval_'+str(frame1)+'Mbps.png')
 plt.clf()
 #==========================================% Bad Runs==========================
@@ -186,31 +186,9 @@ plt.savefig(str(dirName)+'/'+'Avg Frame_loss'+str(frame1)+'Mbps.png')
 plt.clf()
 #======================Shortend Duration Analysis==========================================
 
-frame1=65
-
-s_name= open("files/"+str(frame1)+'_1.txt')
-s_name_1=open("files/"+str(frame1)+'_2.txt')
-s_name_2=open("files/"+str(frame1)+'_3.txt')
-s_name_3=open("files/"+str(frame1)+'_4.txt')
 
 
 
-r_1=file_read(s_name)
-r_2=file_read(s_name_1)
-r_3=file_read(s_name_2)
-r_4=file_read(s_name_3)
-
-dirName='img/'+str(frame1)+'Mbps_short'
-
-try:
-    os.mkdir(dirName)
-    print("Directory " , dirName ,  " Created ") 
-except FileExistsError:
-    print("Directory " , dirName ,  " already exists")
-
-arr=[r_1,r_2,r_3,r_4]
-path=dirName
-plot_consolidated_run_master(arr,path) 
 
 
 #====Interval and Burst len consolidated probabiltiy accross all recv===========================================

@@ -17,7 +17,7 @@ def get_count(rate):
 #print(new_count_1)
 
     for i in range(1,5):
-        makestting=str("files/"+get_frame_rate+'Mbps_'+str(i)+'.txt')
+        makestting=str("files/"+get_frame_rate+'_'+str(i)+'.txt')
         makestting=makestting.lstrip()
         ## makestring is added to generate the text file to be read dynamically 
     
