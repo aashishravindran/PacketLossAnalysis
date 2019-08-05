@@ -10,7 +10,7 @@ Created on Thu Jul  4 19:50:37 2019
 Drive code for computing rime Sync and receiver delay calculation
 """
 
-from imports import get_retransmission_delays,time_sync,reference_ts
+from global_functions import *
 
 
 # =====================================Function Decleration Startes Here ===========================================
@@ -86,13 +86,13 @@ def recv_delay_calucaltion_driver(ref,recv):
     rtype=dict{}
     """
       ## This function for each run caluclates a dictionary and return the retransmisison delay value 
-      dictionary = {}
-      for key, value in enumerate(recv):
+    dictionary = {}
+    for key, value in enumerate(recv):
              ## ref[key] ==[seq,timestamp]
              ##recv[key]==[seq,timestamp]
             dictionary[key] = get_retransmission_delays(ref[key], recv[key])
             
-      return dictionary
+    return dictionary
 
 
 #=============================Execution========================================

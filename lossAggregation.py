@@ -7,7 +7,7 @@ Created on Mon Jul  1 11:00:26 2019
 """
 
 import pandas as pd;
-from get_count import get_count
+from global_functions import get_count
  
 def format_data(data_name):
      

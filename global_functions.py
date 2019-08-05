@@ -7,6 +7,51 @@ Created on Thu Jul  4 09:52:50 2019
 """
 # Created for Time Synchronization and Delay
 
+
+
+
+def get_count(rate):
+    """
+    Input -> Frame Rate->str
+    output->no of runs
+    """
+    
+    get_frame_rate=rate
+    new_count_1=1
+    nc=[]
+#print(new_count_1)
+
+    for i in range(1,5):
+        makestting=str("files/"+get_frame_rate+'Mbps_'+str(i)+'.txt')
+        makestting=makestting.lstrip()
+        ## makestring is added to generate the text file to be read dynamically 
+    
+        try: #Adding try except block to handle "File Not found Exception"
+            with open(makestting) as f: #File Open Statement
+                for line in f: #Iterate through All the lines in the file and look for the Phrase Starting
+                    new_count_1+= line.count("Starting") #Count the number of times Starting occurs since each Starting is a new Run 
+            nc.append(new_count_1) # After the entire file is read, append the count to the final array 
+            new_count_1=1
+        except (OSError, IOError) as e: #Any exception raised in try block will be handled here 
+            print(str(e))
+
+    result = False;
+    if len(nc) > 0 :
+        result = all(elem == nc[0] for elem in nc)
+        # To check if all the elements in the array are same  
+    if result :
+       print("Number of Runs is the same")
+       print("Number Of Runs:"+str(nc)) #Print array with number of runs
+    elif OSError or IOError :        
+           print("Some error Occurred")
+    else:
+        print("Number of Runs is the diffrent")
+        
+    return list(nc)
+
+
+
+
 def reference_ts(file):
     """
     Input file object
@@ -64,7 +109,7 @@ def time_sync(reference, time_stamps):
             synchronied_timestamp.append(sync_count) #Time Sync Logic
         else: #else used previously calculated count
             next_time_stamp = timestamp-sync_count #Time Sync Logic
-            final_count = timestamp+next_time_stamp
+            final_count = time_stamps[index-1]+next_time_stamp
             synchronied_timestamp.append(final_count)
     return synchronied_timestamp #Retrun the timestamp for each sequence no
 
