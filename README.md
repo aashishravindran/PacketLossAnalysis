@@ -1,1 +1,1 @@
-# MediumAnalyzer- Loss Aggregation, Time Sync and Probability Mass Functions
+# PacketLossAnalysis-Loss Aggregation, Time Sync and Probability Mass Functions
