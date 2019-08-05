@@ -1,1 +1,1 @@
-# MediumAnalyzer-
+# MediumAnalyzer- Loss Aggregation, Time Sync and Probability Mass Functions
