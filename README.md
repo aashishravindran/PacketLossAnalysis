@@ -31,10 +31,10 @@ work with Multiple Data Rate so it makes sense to repoint the location of text f
 2) Any changes made file name or path should be made in the following scripts in the respective driver functions.
 3) Any changes to logic in file(if necessay) should be made in the following scripts:
 
-    a) lossAggregation.py -> formatdata() For Loss Aggregation
-    b) time_sync_main.py->reference_params(),time_sync_driver
-    c) probabilty_mass_function.py ->file_read()
-    d) get_count()
+    1. lossAggregation.py -> formatdata() For Loss Aggregation
+    2. time_sync_main.py->reference_params(),time_sync_driver
+    3. probabilty_mass_function.py ->file_read()
+    4. get_count()
 !!! Importat : while doing Pmf analysis, if the location, name of the text file is channged then the same change must be reflected in
 getcount.py
 4) It is better to follow the same naming conventions used for frewer modifications in scripts
