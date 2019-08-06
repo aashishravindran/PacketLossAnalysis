@@ -26,7 +26,8 @@ Since this repo has three major functionalities (Pmf,TimeSync,Loss Aggregation )
 3)vizualization_master-> function decelerations for plottign vizaulization. We do this because often times we 
 work with Multiple Data Rate so it makes sense to repoint the location of text file and proceed with the analysis
 # Text file location:
-1)While running the function please keep all your text files in a dicrectory called files.
+
+1) While running the function please keep all your text files in a dicrectory called files.
 2) Any changes made file name or path should be made in the following scripts in the respective driver functions.
 3) Any changes to logic in file(if necessay) should be made in the following scripts:
     a. lossAggregation.py -> formatdata() For Loss Aggregation
