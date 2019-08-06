@@ -9,6 +9,8 @@ import pandas as pd
 from collections import Counter
 import matplotlib.pyplot as plt
 import statistics
+from sklearn.cluster import AgglomerativeClustering
+
 
 def loss_Aggr_file_read(file,noofruns):
     """
@@ -174,6 +176,7 @@ def loss_burst_pmf(run):
         if run[i] == 'N':
             count+=1
     loss_burst=Counter(arr)
+    
 #    print(loss_burst)
 #    print("============")
 #    print(len(arr))
@@ -294,4 +297,16 @@ def bad_runs_across_runs(recv):
         count=0
     
     return dict
+def get_agglomerative_cluster(receiver,numberofclusters):
     
+    df=pd.Series(receiver).to_frame()
+    df['Run_no']=df.index
+    df['perc']=df[0]
+    df.drop(columns =[0], inplace = True) 
+    res=df
+    val_bc=res
+    val_bc_1=val_bc.values
+    km=val_bc_1
+    hc = AgglomerativeClustering(n_clusters = numberofclusters, affinity = 'euclidean', linkage = 'ward')
+    labels=hc.fit_predict(km)
+    return[km,labels]

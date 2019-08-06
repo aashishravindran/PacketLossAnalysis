@@ -212,6 +212,19 @@ def plot_recv_loss_combination(loss_aggrgation,combtoplot,path,frame_rate,NoOfRu
         plt.clf()
     return 0
     
+def plot_loss_percentage_cluster(recv_arr,numberofclusters,path,frame_rate):
+     col=['blue','red','orange','green','black']
+     for index,value in enumerate(recv_arr):
+         
+        km,labels=get_agglomerative_cluster(value,numberofclusters)[0],get_agglomerative_cluster(value,numberofclusters)[1]
+        ##===============Ready to plot====================
+        for i in range(numberofclusters):
+            plt.scatter(km[labels==i,0],labels[labels==i], c =col[i], label = 'Recv'+str(index+1)+'Loss Range:'+str(round(float(min(km[labels==i,1]))))+'-'+str(round(float(max(km[labels==i,1])))))
     
         
+        plt.title('Clustering'+str(frame_rate))
+        plt.legend(loc = 'top right', bbox_to_anchor = (1.0, 0.9))
+        plt.savefig(str(path)+'/'+'Recv'+str(index+1)+'Clustering'+str(frame_rate)+'Mbps.png',dpi=100)  
+        plt.clf()
+     return 0
     
