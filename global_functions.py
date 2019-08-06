@@ -89,7 +89,7 @@ def get_retransmission_delays(ref,sync):
             if sync[i][j] in ref[0]:
                 print(sync[1][j])
                 ## diff = first timestamp
-                diff =  abs(ref[1][ref[0].index(sync[i][j])]-sync[1][j])
+                diff =  sync[1][j]-ref[1][ref[0].index(sync[i][j])]
                 # print(diff)
                 difference.append(diff)
                 delay[sync[i][j]] = diff ##Append to dictionary with seqnece Number and Delay
