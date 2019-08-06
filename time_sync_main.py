@@ -7,7 +7,12 @@ Created on Thu Jul  4 19:50:37 2019
 """
 
 """
-Drive code for computing rime Sync and receiver delay calculation
+Driver code for computing time Sync and receiver delay calculation
+For simpler calculations and increased modularity, the driver code parses the text 
+file while syncing timestamps at a run level
+
+The same concept is repeated for Recevier delay calculations
+
 """
 
 from global_functions import *
@@ -31,7 +36,7 @@ def reference_params(file_to_sync):
     count = 0;
     for i in range(0, len(line)):
 
-        if "Starting" in line[i]:
+        if "Starting" in line[i] or i == len(line)-1:
             val = [seq, times] ## 2D Array containing seq and synchronized time Stamps
             SyncLog[count] = val #Appending the value to the dictionary for delay calculation
             seq = [];
@@ -62,7 +67,7 @@ def time_sync_driver(reference_map, file_to_sync):
     count = 0;
     for i in range(0, len(ls)):
 
-        if "Starting" in ls[i]:
+        if "Starting" in ls[i] or i == len(ls)-1:
             ### pass the value per run into ts func and get sync time time stamps
             reference = reference_map[count]
             sync = time_sync(reference, times)
@@ -102,9 +107,11 @@ Sync_log_1 = open('files/ts_logs/time_sync_10_54_4.txt','r')
 Sync_log_2 = open('files/ts_logs/time_sync_10_54_5.txt','r')
 
 
-reference_map = reference_ts(file) # Passing the reference file to get time Stamps
-f=open('files/ts_logs/time_sync_10_54_3.txt','r')
-ref=reference_params(f)
+reference_map = reference_ts(file) ## Get first timestamps after each run 
+file.close()
+# Passing the reference file to get time Stamps
+file=open('files/ts_logs/time_sync_10_54_3.txt','r')
+ref=reference_params(file) # Reference file for recevier delay calculation
 sl1=time_sync_driver(reference_map,Sync_log_1) # Time Sync for Recv 1
 sl2=time_sync_driver(reference_map,Sync_log_2) # Time Sync for Recv 2
 
