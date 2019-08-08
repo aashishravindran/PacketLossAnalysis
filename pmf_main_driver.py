@@ -89,7 +89,7 @@ for i,value in enumerate(arr):
 path=dirName
 plot_consolidated_run_master(arr,path) 
 ## Needs to be call with an array containg all receivers
-#==================================Get All Runs and  plot  top n values================================
+#==================================Get All Runs and  plot  top n values=======
 plot_most_commom_pmf(arr,path,frame1,10)
 
 #====================Plot bad runs=============================================
@@ -124,8 +124,6 @@ shor_duration2=open('files/65_3.txt')
 
 shor_duration3=open('files/65_4.txt')
 
-
-
 recv_arr=[]
 path='img/'
 recv_arr.extend([bad_runs_across_runs(get_allruns(file_read(shor_duration))),
@@ -133,3 +131,19 @@ recv_arr.extend([bad_runs_across_runs(get_allruns(file_read(shor_duration))),
                  bad_runs_across_runs(get_allruns(file_read(shor_duration2))),
                  bad_runs_across_runs(get_allruns(file_read(shor_duration3)))])
 plot_loss_percentage_cluster(recv_arr,3,path,65)
+
+#==============================================================================
+
+shor_duration=open('files/65_1.txt')
+r=bad_runs_across_runs(get_allruns(file_read(shor_duration)))
+ret=get_buckets(r,5)
+rt=ret['binned'].value_counts()
+x,y=zip(*(rt.items()))
+plt.bar(x,y)
+plt.ylabel('No of times Runs')
+plt.xlabel('Interval')
+plt.title("Loss Bucket % vs Number of Runs per Receiver")
+
+#=============================================================================
+
+

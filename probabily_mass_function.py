@@ -126,7 +126,7 @@ def file_read(file):
     dict={}
     seqNo=[]
     for i in range(0,len(line)):
-        if "Starting" in line[i]:
+        if "Starting" in line[i] or i == len(line)-1:
             dict[count]=seqNo
             seqNo=[]
             count+=1
@@ -144,6 +144,7 @@ def get_frame_value(run):
    
     x_axsi=[]
     bm=[]
+    seq=[]
     val={}
     for i in range(0,500):
         if i not in run:
@@ -155,10 +156,9 @@ def get_frame_value(run):
             bm.append('Y')
             val[i]='Y'
             x_axsi.append(i)
+            seq.append(i)  
     
-         
-    
-    return [x_axsi,bm,val]  ## returns index,value and hashmap. Should change this to return only hashmap
+    return [x_axsi,bm,val,seq]  ## returns index,value and hashmap. Should change this to return only hashmap
 
 
 def loss_burst_pmf(run):
@@ -233,13 +233,19 @@ def consolidated_pmf(recv,val):
         burstlen=loss_burst_pmf(arr)
         b=burstlen.values()
         stats.extend([max(b),min(b),statistics.median(b),statistics.mean(b)]) #some statistical implementaiton used later
+        most_frequent_burst_lent=max(burstlen.keys())
+        least_frequnet_burst_lent=min(burstlen.keys())
+        
        # print(stats)
-        return [burstlen,stats]  #some statistical implementaiton
+        return [burstlen,stats,most_frequent_burst_lent,least_frequnet_burst_lent]  #some statistical implementaiton
     else:
         interval=loss_burst_interval(arr)
         b=interval.values()
         stats.extend([max(b),min(b),statistics.median(b),statistics.mean(b)])
-        return [interval,stats]
+        most_frequent_burst_int=max(burstlen.keys())
+        least_frequnet_burst_int=min(burstlen.keys())
+        
+        return [interval,stats,most_frequent_burst_int,least_frequnet_burst_int]
 
 def across_all_recv(recv_arr,val):
     """
@@ -300,9 +306,14 @@ def bad_runs_across_runs(recv):
 def get_agglomerative_cluster(receiver,numberofclusters):
     
     df=pd.Series(receiver).to_frame()
+    
+    
+    
     df['Run_no']=df.index
     df['perc']=df[0]
     df.drop(columns =[0], inplace = True) 
+    
+                      
     res=df
     val_bc=res
     val_bc_1=val_bc.values
@@ -310,3 +321,38 @@ def get_agglomerative_cluster(receiver,numberofclusters):
     hc = AgglomerativeClustering(n_clusters = numberofclusters, affinity = 'euclidean', linkage = 'ward')
     labels=hc.fit_predict(km)
     return[km,labels]
+
+def get_buckets(receiver,NoOfBuckets):
+    bucket_interval=100/NoOfBuckets
+    
+    start,end=0,bucket_interval
+    arr=[]
+    for i in range(1,NoOfBuckets+1):
+        arr.append(start)
+        start=end+1
+        end=end+bucket_interval
+        df=pd.Series(receiver).to_frame()   
+    df['Run_no']=df.index
+    df['perc']=df[0]
+    df.drop(columns =[0], inplace = True) 
+    print(df)
+    for index,row in df.iterrows():
+        d=row['perc']    
+        for j in range(0,len(arr)):
+            if d > int(arr[j]) and d < int(arr[j+1]):
+                
+                df.loc[index,'binned']=str(str(arr[j])+'-'+str(arr[j+1]))
+      
+    
+       
+    df.drop(columns =['perc'], inplace = True) 
+    return df
+        
+    
+#arr=[30,40,20,15]
+#bis=[0,21,41,61,81]
+#b=[]
+
+    
+    
+

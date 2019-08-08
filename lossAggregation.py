@@ -38,7 +38,7 @@ count=count[0]
 name= (str("files/"+frame_rate+"Mbps"+"_1.txt")).lstrip()#'48Mbps_1.txt'
 name_1=(str("files/"+frame_rate+"Mbps"+"_2.txt")).lstrip()
 name_2=(str("files/"+frame_rate+"Mbps"+"_3.txt")).lstrip()
-name_3=(str("files/"+frame_rate+"Mbps"+"_3.txt")).lstrip()
+name_3=(str("files/"+frame_rate+"Mbps"+"_4.txt")).lstrip()
 
 rec_1=format_data(name)
 recv_2=format_data(name_1)
@@ -51,7 +51,7 @@ dict2={}
 dict3={}
 dict4={}
 
-i=1;
+i=0;
 nc1=[];
 nc2=[];
 nc3=[];
@@ -59,7 +59,7 @@ nc4=[];
 
 #==========Iterate through all the rows of across all text files and obtain sequence Numbers in an Array==================
 for index,row in rec_1.iterrows():
-     if row['seq']=="New Run":
+     if row['seq']=="New Run" or index == rec_1.tail(1).index.item():
          dict[i]=nc1; #For each run append Number Of runs and Sequence Number
          nc1=[];
          i+=1
@@ -67,9 +67,9 @@ for index,row in rec_1.iterrows():
          new= row['seq'].split('=') #Gets Sequence Number 
          nc1.append(int(new[1]))
 
-i=1;       
+i=0;       
 for index,row in recv_2.iterrows(): #iterating all the rows for the second receiver
-     if row['seq']=="New Run":
+     if row['seq']=="New Run" or index == recv_2.tail(1).index.item():
          dict2[i]=nc2;
          nc2=[];
          i+=1
@@ -77,18 +77,18 @@ for index,row in recv_2.iterrows(): #iterating all the rows for the second recei
          new= row['seq'].split('=')
          nc2.append(int(new[1]))
 
-i=1;
+i=0;
 for index,row in recv_3.iterrows():
-     if row['seq']=="New Run":
+     if row['seq']=="New Run" or index == recv_3.tail(1).index.item():
          dict3[i]=nc3;
          nc3=[];
          i+=1
      else:
          new= row['seq'].split('=')
          nc3.append(int(new[1]))
-i=1;
+i=0;
 for index,row in recv_4.iterrows():
-     if row['seq']=="New Run":
+     if row['seq']=="New Run"  or index == recv_4.tail(1).index.item():
          dict4[i]=nc4;
          nc4=[];
          i+=1
@@ -98,7 +98,7 @@ for index,row in recv_4.iterrows():
 #========================================================Loss Aggregation Starts Here================         
 loss_Aggregation={}
 #numRuns=len(dict)+1
-for k,j in  enumerate(dict):
+for j in  range(0,len(dict)):
     fin1=dict[j]
     fin2=dict2[j]
     fin3=dict3[j]
@@ -142,8 +142,8 @@ for k,j in  enumerate(dict):
             
             
     loss_Aggregation[j]=run; #Assign the array to the Hash Map
-    
-print(loss_Aggregation)
+
+
 file=open("files/"+frame_rate+"Mbps"+"Data_Aggregation_Logs.txt","w")
 file.write(frame_rate+"MbpsLogs\n")
 

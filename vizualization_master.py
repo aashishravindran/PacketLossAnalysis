@@ -150,15 +150,17 @@ def plot_statistical_highlights(recv_arr,path,frame_rate,analysis_type):
     input analysis_type 1 for burst len, 0 for interval 
     """
     
-    
     col=['blue','red','orange','green']
     
     if analysis_type == 1:
         for index,receivers in enumerate(recv_arr):
             recv_all_runs=get_allruns(receivers)
             x=['Max','Min','Median','Average']
-            re=consolidated_pmf(recv_all_runs,1)[1]
-            plt.bar(x,re,label='recv'+str(index+1),color=col[index])
+            re=consolidated_pmf(recv_all_runs,1)
+            statisitcal_pmf=re[1]
+            max_valu=round(re[2])
+            min_value=round(re[3])
+            plt.bar(x,statisitcal_pmf,label='Recv '+str(index+1)+'Range of Burst_len:'+str(min_value+' '+max_valu),color=col[index])
         
         plt.xlabel('Min,Max,Avg,Median burst len across receivers')
         plt.ylabel('Pmf Of Burst Len')
@@ -171,8 +173,11 @@ def plot_statistical_highlights(recv_arr,path,frame_rate,analysis_type):
         for index,receivers in enumerate(recv_arr):
             recv_all_runs=get_allruns(receivers)
             x=['Max','Min','Median','Average']
-            re=consolidated_pmf(recv_all_runs,0)[1]
-            plt.bar(x,re,label='recv'+str(index+1),color=col[index])
+            re=consolidated_pmf(recv_all_runs,0)
+            statisitcal_pmf=re[1]
+            max_valu=round(re[2])
+            min_value=round(re[3])
+            plt.bar(x,statisitcal_pmf,label='Recv '+str(index+1)+'Interval Range:'+str(min_value+' '+max_valu),color=col[index])
         
         plt.xlabel('Min,Max,Avg,Median Interval len across receivers')
         plt.ylabel('Pmf Of Burst Len')
@@ -219,11 +224,23 @@ def plot_loss_percentage_cluster(recv_arr,numberofclusters,path,frame_rate):
         km,labels=get_agglomerative_cluster(value,numberofclusters)[0],get_agglomerative_cluster(value,numberofclusters)[1]
         ##===============Ready to plot====================
         for i in range(numberofclusters):
-            plt.scatter(km[labels==i,0],labels[labels==i], c =col[i], label = 'Recv'+str(index+1)+'Loss Range:'+str(round(float(min(km[labels==i,1]))))+'-'+str(round(float(max(km[labels==i,1])))))
+            if i ==0:
+                c='blue'
+            elif i ==1:
+                c='red'
+            elif i ==2:
+                c='orange'
+            elif i==3:
+                c='green'
+            elif i==4:
+                c='black'
+            plt.scatter(km[labels==i,0],km[labels==i,1], c = c, label = 'Recv'+str(index+1)+'Loss Range:'+str(round(float(min(km[labels==i,1]))))+'-'+str(round(float(max(km[labels==i,1])))))
     
         
-        plt.title('Clustering'+str(frame_rate))
-        plt.legend(loc = 'top right', bbox_to_anchor = (1.0, 0.9))
+        plt.title('Recv'+str(index+1)+'Clustering'+str(frame_rate))
+        plt.xlabel('Run No')
+        plt.ylabel('Loss %')
+        plt.legend()
         plt.savefig(str(path)+'/'+'Recv'+str(index+1)+'Clustering'+str(frame_rate)+'Mbps.png',dpi=100)  
         plt.clf()
      return 0
