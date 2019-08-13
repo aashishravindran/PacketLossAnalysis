@@ -14,14 +14,14 @@ This repository has three main driver functions:
 2) time_sync_main
 3) pmf_main_driver
 
-#Loss Aggregation
+# Loss Aggregation:
 Loss aggregation is done  to "aggregate" frame loss across receivers.
 What this essentially means is that we assign a unique value in the raneg of 1-16
 for a receiver combination. For example if all the receivers get a particular frame,
 the value '1' is assigned. Essentially since there are four recv in the experimental setup and each recv can either
 get a frame or not get a we get 2^4 =16 values
 
-#Probabilty Mass Function:
+# Probabilty Mass Function:
 Pmf is a great measure for statistical analysis. We use Pmf to identify patterns in loss burst len and interval
 .This is done at Run level and a receiver level 
 
