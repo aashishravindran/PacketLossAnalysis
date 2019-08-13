@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Jul  4 19:50:37 2019
-
-@author: ashubunutu
+@author: Aashish Ravindran
 """
 
 """
@@ -11,7 +10,7 @@ Driver code for computing time Sync and receiver delay calculation
 For simpler calculations and increased modularity, the driver code parses the text 
 file while syncing timestamps at a run level
 
-The same concept is repeated for Recevier delay calculations
+The same is repeated for Recevier delay calculations
 
 """
 

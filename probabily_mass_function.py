@@ -3,12 +3,15 @@
 """
 Created on Thu Jul 25 12:06:24 2019
 
-@author: ashubunutu
+@author: Aashish Ravindran
 """
 import pandas as pd 
 from collections import Counter
 import matplotlib.pyplot as plt
 import statistics
+from sklearn.cluster import AgglomerativeClustering
+
+
 
 def loss_Aggr_file_read(file,noofruns):
     """
@@ -114,34 +117,19 @@ def recv_combination_loss(datafra,combination,NoOfRuns):
         return datafra['Pmf_Three_Recv']
         
 
-def file_read(file):
-    """
-    Reads a file and returns a dictionaary containgin run No and seqNo received for each run
-    """
-    #Receiver Level
-    line=file.readlines()
-    count=0;
-    dict={}
-    seqNo=[]
-    for i in range(0,len(line)):
-        if "Starting" in line[i]:
-            dict[count]=seqNo
-            seqNo=[]
-            count+=1
-        else:
-            val=int((line[i].split('and')[0]).split('=')[1])
-            seqNo.append(val)
-    return dict
             
 def get_frame_value(run):
     """
     get_frame_value retruns a dictionary of raw values
-    Run Level
+    Run Level:list[list[0-500],list['N','Y'],dict{},list[seq No Received]]
     This function gets the raw data value, append 'Y' if recevied else 'N' if not received
+    all values returned are used in some form of analysis or other, hence it is imperative that the retrun type
+    is not changed   
     """   
    
     x_axsi=[]
     bm=[]
+    seq=[]
     val={}
     for i in range(0,500):
         if i not in run:
@@ -153,16 +141,17 @@ def get_frame_value(run):
             bm.append('Y')
             val[i]='Y'
             x_axsi.append(i)
+            seq.append(i)  
     
-         
-    
-    return [x_axsi,bm,val]  ## returns index,value and hashmap. Should change this to return only hashmap
+    return [x_axsi,bm,val,seq]  ## returns index,value and hashmap. Should change this to return only hashmap
 
 
 def loss_burst_pmf(run):
-    
-    ###Run Level
-    #Computes the pmf of loss burst len
+    """
+    Function computes pmf of burst len at a run level 
+    rtype: pmf
+    """
+
     count=0
     arr=[]
     pmf={}
@@ -174,21 +163,21 @@ def loss_burst_pmf(run):
         if run[i] == 'N':
             count+=1
     loss_burst=Counter(arr)
-#    print(loss_burst)
-#    print("============")
-#    print(len(arr))
-
+    
     
     for key,value in loss_burst.items():
-#        print(key,value)
+
         pmf[key]=(value/len(arr))
         
 
     return pmf
 
 def loss_burst_interval(run):
-    #Run level
-     # Computes the pmf of interval
+    """
+    Function computes pmf of interval at a run level 
+    rtype: pmf
+    """
+
     count =0;
     arr=[]
     pmf={}
@@ -199,7 +188,7 @@ def loss_burst_interval(run):
         if run[i] == 'Y':
             count+=1
     interval=Counter(arr)
-#    print(interval)
+
     for key,value in interval.items():
 
         pmf[key]=(value/len(arr))
@@ -208,6 +197,11 @@ def loss_burst_interval(run):
     return pmf
 
 def get_allruns(recv):
+    """
+    Funtion to get all runs per receiver
+    rtype: Dictionary of all runs
+    """
+    
     dict={}
     for i in range(0,len(recv)):
         dict[i]=get_frame_value(recv[i])[1]
@@ -218,7 +212,15 @@ def get_allruns(recv):
 def consolidated_pmf(recv,val):
     """
     Used to compute the pmf and interval for all runs per receiver
+    val==1 for burstlen 
+    val==0 for interval
     """
+    most_frequent_burst_int=0
+    least_frequnet_burst_int=0
+    most_frequent_burst_lent=0
+    least_frequnet_burst_lent=0
+    
+    
     #Receiver level
     # used to compuet pmf and interval across all runs
     arr=[]
@@ -230,20 +232,26 @@ def consolidated_pmf(recv,val):
         burstlen=loss_burst_pmf(arr)
         b=burstlen.values()
         stats.extend([max(b),min(b),statistics.median(b),statistics.mean(b)]) #some statistical implementaiton used later
+        most_frequent_burst_lent=max(burstlen.keys())
+        least_frequnet_burst_lent=min(burstlen.keys())
+        
        # print(stats)
-        return [burstlen,stats]  #some statistical implementaiton
+        return [burstlen,stats,most_frequent_burst_lent,least_frequnet_burst_lent]  #some statistical implementaiton
     else:
         interval=loss_burst_interval(arr)
         b=interval.values()
         stats.extend([max(b),min(b),statistics.median(b),statistics.mean(b)])
-        return [interval,stats]
+        most_frequent_burst_int=max(interval.keys())
+        least_frequnet_burst_int=min(interval.keys())
+        
+        return [interval,stats,most_frequent_burst_int,least_frequnet_burst_int]
 
 def across_all_recv(recv_arr,val):
     """
     This function computest the loss burst pmf and intervals across all recveicvers
+    Frame rate Level
+    consolidetd pmf and interval for all runs across all receivers
     """
-    ##Frame rate Level
-    #consolidetd pmf and interval for all runs across all receivers
     arr=[]
     for recv in recv_arr:
         for key,value in recv.items():
@@ -256,9 +264,10 @@ def across_all_recv(recv_arr,val):
                                          
 
 def most_frequent_losses_pmf(recv,top_n_value,total_runs):
-    ## Recevier Level
-    ##Please Run 'Get All Runs Befeore Running This'
-    ## this function can help identify the Frames which have the highest probabilty of being lost for a frame rate/ receiver
+    """Recevier Level
+    Please Run 'Get All Runs Befeore Running This'
+     this function can help identify the Frames which have the highest probabilty of being lost for a frame rate/ receiver
+    """
     count=0
     dict={}
     for key, value in recv.items():
@@ -294,4 +303,61 @@ def bad_runs_across_runs(recv):
         count=0
     
     return dict
+def get_agglomerative_cluster(receiver,numberofclusters):
     
+    """
+    Get Agglomerative clustering for receivers of luss burst percentage
+    """
+    df=pd.Series(receiver).to_frame()
+    
+    df['Run_no']=df.index
+    df['perc']=df[0]
+    df.drop(columns =[0], inplace = True) 
+    
+                      
+    res=df
+    val_bc=res
+    val_bc_1=val_bc.values
+    km=val_bc_1
+    hc = AgglomerativeClustering(n_clusters = numberofclusters, affinity = 'euclidean', linkage = 'ward')
+    labels=hc.fit_predict(km)
+    return[km,labels]
+
+def get_buckets(receiver,NoOfBuckets):
+    """
+    This function creates intervals of loss percentage based on user specified values
+    This can be used to dipaly an aggregated value  Loss Bucket % vs Number of Runs per Receiver
+    which fall in that bucket
+    
+    for example 5 runs has losses in the interval 0-20 and so on
+    
+    """
+    
+    bucket_interval=100/NoOfBuckets
+    
+    start,end=0,bucket_interval
+    arr=[]
+    for i in range(1,NoOfBuckets+1):
+        arr.append(start)
+        start=end+1
+        end=end+bucket_interval
+        df=pd.Series(receiver).to_frame()   
+    df['Run_no']=df.index
+    df['perc']=df[0]
+    df.drop(columns =[0], inplace = True) 
+    print(df)
+    for index,row in df.iterrows():
+        d=row['perc']    
+        for j in range(0,len(arr)):
+            if d > int(arr[j]) and d < int(arr[j+1]):
+                
+                df.loc[index,'binned']=str(str(arr[j])+'-'+str(arr[j+1]))
+      
+    
+       
+    df.drop(columns =['perc'], inplace = True) 
+    return df
+           
+    
+    
+
