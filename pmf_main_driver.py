@@ -12,7 +12,7 @@ Created on Mon Jul 29 15:43:14 2019
 
 import pandas as pd 
 import os
-from global_functions import get_count
+from global_functions import *
 import matplotlib.pyplot as plt
 import numpy as np
 from probabily_mass_function import *
@@ -23,7 +23,7 @@ from sklearn.cluster import AgglomerativeClustering
 
 
 
-frame1=48
+frame1=54
 dirName='img/'+str(frame1)+'Mbps'
 
 try:
@@ -54,6 +54,9 @@ recv_1=file_read(name)
 recv_2=file_read(name_1)
 recv_3=file_read(name_2)
 recv_4=file_read(name_3)
+
+count=get_count_master(recv_1,recv_2,recv_3,recv_4)
+
 
 
 
@@ -90,7 +93,7 @@ path=dirName
 plot_consolidated_run_master(arr,path) 
 ## Needs to be call with an array containg all receivers
 #==================================Get All Runs and  plot  top n values=======
-plot_most_commom_pmf(arr,path,frame1,10)
+plot_most_commom_pmf(arr,path,frame1,10,count)
 
 #====================Plot bad runs=============================================
 plot_bad_runs(arr,path,frame1)
@@ -103,14 +106,14 @@ plot_statistical_highlights(arr,path,frame1,0)
 
 #=======================================Loss Aggregation 2,3,4 recv plot=======
 loss_aggregation_file_opne=open('files/'+str(frame1)+'MbpsData_Aggregation_Logs.txt')
-l_a_values=loss_Aggr_file_read(loss_aggregation_file_opne,get_count(str(frame1))[1])
+l_a_values=loss_Aggr_file_read(loss_aggregation_file_opne,count)
 
 
-plot_recv_loss_combination(l_a_values,4,path,frame1,get_count(str(frame1))[1])
+plot_recv_loss_combination(l_a_values,4,path,frame1,count)
 
-plot_recv_loss_combination(l_a_values,3,path,frame1,get_count(str(frame1))[1])
+plot_recv_loss_combination(l_a_values,3,path,frame1,count)
 
-plot_recv_loss_combination(l_a_values,2,path,frame1,get_count(str(frame1))[1])
+plot_recv_loss_combination(l_a_values,2,path,frame1,count)
 #==============================================================================
 
 
@@ -140,7 +143,7 @@ ret=get_buckets(r,5)
 rt=ret['binned'].value_counts()
 x,y=zip(*(rt.items()))
 plt.bar(x,y)
-plt.ylabel('No of times Runs')
+plt.ylabel('No of Runs')
 plt.xlabel('Interval')
 plt.title("Loss Bucket % vs Number of Runs per Receiver")
 

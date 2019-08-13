@@ -6,7 +6,7 @@ Created on Tue Jul 23 21:57:34 2019
 """
 
 import pandas as pd 
-from global_functions import get_count
+from global_functions import *
 import matplotlib.pyplot as plt
 import numpy as np
 from probabily_mass_function import *
@@ -91,14 +91,14 @@ def plot_consolidated_run_master(receivers,path):
     return 0
 
 
-def plot_most_commom_pmf(recv_arr,path,frame_rate,k):
+def plot_most_commom_pmf(recv_arr,path,frame_rate,k,count):
     """
     This function is used to plot the Top 10 frame NUmbers which have the highest probability of being lost 
     Inputs:array of all receivers,frame rate,path to store fig and k->top k values 
     rtype:0
     
     """
-    c=get_count(str(frame_rate))[1]
+    c=count
     count=1
     for receiver in recv_arr:
         recv_all_runs=get_allruns(receiver)
@@ -160,7 +160,7 @@ def plot_statistical_highlights(recv_arr,path,frame_rate,analysis_type):
             statisitcal_pmf=re[1]
             max_valu=round(re[2])
             min_value=round(re[3])
-            plt.bar(x,statisitcal_pmf,label='Recv '+str(index+1)+'Range of Burst_len:'+str(min_value+' '+max_valu),color=col[index])
+            plt.bar(x,statisitcal_pmf,label='Recv '+str(index+1)+'Range of Burst_len:'+str(str(min_value)+'-'+str(max_valu)),color=col[index])
         
         plt.xlabel('Min,Max,Avg,Median burst len across receivers')
         plt.ylabel('Pmf Of Burst Len')
@@ -177,7 +177,7 @@ def plot_statistical_highlights(recv_arr,path,frame_rate,analysis_type):
             statisitcal_pmf=re[1]
             max_valu=round(re[2])
             min_value=round(re[3])
-            plt.bar(x,statisitcal_pmf,label='Recv '+str(index+1)+'Interval Range:'+str(min_value+' '+max_valu),color=col[index])
+            plt.bar(x,statisitcal_pmf,label='Recv '+str(index+1)+'Interval Range:'+str(str(min_value)+'-'+str(max_valu)),color=col[index])
         
         plt.xlabel('Min,Max,Avg,Median Interval len across receivers')
         plt.ylabel('Pmf Of Burst Len')
@@ -188,6 +188,11 @@ def plot_statistical_highlights(recv_arr,path,frame_rate,analysis_type):
     return 0
 
 def plot_recv_loss_combination(loss_aggrgation,combtoplot,path,frame_rate,NoOfRuns):
+    """
+    This function plots percentage of time a frame was loss across all recv,
+    any two recv and three recv across all runs
+    Please make sure Loss_Aggregartion is run before running this file
+    """
     df=recv_combination_loss(loss_aggrgation,combtoplot,NoOfRuns)
     data=df.to_dict() 
     x,y=zip(*(data.items()))
@@ -218,6 +223,13 @@ def plot_recv_loss_combination(loss_aggrgation,combtoplot,path,frame_rate,NoOfRu
     return 0
     
 def plot_loss_percentage_cluster(recv_arr,numberofclusters,path,frame_rate):
+    
+    """
+    This function plots the following :
+        1) Creates Clusters based on Aggleromative clustering,
+        2) Plot the Loss % across Runs and also gives informaion about the range of 
+            losses in that cluser
+    """
      col=['blue','red','orange','green','black']
      for index,value in enumerate(recv_arr):
          
