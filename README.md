@@ -10,9 +10,9 @@ at one receiver wrt to the same frame received in other  receivers.
 
 # Repo contents:
 This repository has three main driver functions:
-    1) loss_aggregation.py
-    2) time_sync_main
-    3) pmf_main_driver
+1) loss_aggregation.py
+2) time_sync_main
+3) pmf_main_driver
 #Loss Aggregation
 Loss aggregation is done  to "aggregate" frame loss across receivers.
 What this essentially means is that we assign a unique value in the raneg of 1-16
