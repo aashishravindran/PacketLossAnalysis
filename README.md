@@ -13,6 +13,7 @@ This repository has three main driver functions:
 1) loss_aggregation.py
 2) time_sync_main
 3) pmf_main_driver
+
 #Loss Aggregation
 Loss aggregation is done  to "aggregate" frame loss across receivers.
 What this essentially means is that we assign a unique value in the raneg of 1-16
@@ -23,6 +24,7 @@ get a frame or not get a we get 2^4 =16 values
 #Probabilty Mass Function:
 Pmf is a great measure for statistical analysis. We use Pmf to identify patterns in loss burst len and interval
 .This is done at Run level and a receiver level 
+
 # Imports and Global declarations:
 Since this repo has three major functionalities (Pmf,TimeSync,Loss Aggregation ) imports are divided accordingly
 1) global_functions-> contains all the logic for time_sync,loss_aggregation,Counting Number Of Runs and File Read
